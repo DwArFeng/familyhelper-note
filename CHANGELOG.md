@@ -6,6 +6,14 @@
 
 - 项目结构建立，程序清理测试通过。
 
+- 建立实体以及维护服务，并通过单元测试。
+  - com.dwarfeng.familyhelper.note.stack.bean.entity.AttachmentFileInfo。
+  - com.dwarfeng.familyhelper.note.stack.bean.entity.NoteBook。
+  - com.dwarfeng.familyhelper.note.stack.bean.entity.NoteItem。
+  - com.dwarfeng.familyhelper.note.stack.bean.entity.NoteNode。
+  - com.dwarfeng.familyhelper.note.stack.bean.entity.Ponb。
+  - com.dwarfeng.familyhelper.note.stack.bean.entity.User。
+
 #### Bug修复
 
 - (无)
