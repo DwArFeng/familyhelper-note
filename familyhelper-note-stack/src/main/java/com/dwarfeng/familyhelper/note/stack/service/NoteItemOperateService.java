@@ -1,5 +1,6 @@
 package com.dwarfeng.familyhelper.note.stack.service;
 
+import com.dwarfeng.familyhelper.note.stack.bean.dto.NoteFile;
 import com.dwarfeng.familyhelper.note.stack.bean.dto.NoteFileUploadInfo;
 import com.dwarfeng.familyhelper.note.stack.bean.dto.NoteItemCreateInfo;
 import com.dwarfeng.familyhelper.note.stack.bean.dto.NoteItemUpdateInfo;
@@ -49,9 +50,10 @@ public interface NoteItemOperateService extends Service {
      *
      * @param userKey     执行用户主键。
      * @param noteItemKey 笔记项目的注解。
+     * @return 笔记文件。
      * @throws ServiceException 服务异常。
      */
-    void downloadNoteFile(StringIdKey userKey, LongIdKey noteItemKey) throws ServiceException;
+    NoteFile downloadNoteFile(StringIdKey userKey, LongIdKey noteItemKey) throws ServiceException;
 
     /**
      * 上传笔记文件。

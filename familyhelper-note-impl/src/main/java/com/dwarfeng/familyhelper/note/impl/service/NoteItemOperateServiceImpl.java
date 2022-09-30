@@ -1,5 +1,6 @@
 package com.dwarfeng.familyhelper.note.impl.service;
 
+import com.dwarfeng.familyhelper.note.stack.bean.dto.NoteFile;
 import com.dwarfeng.familyhelper.note.stack.bean.dto.NoteFileUploadInfo;
 import com.dwarfeng.familyhelper.note.stack.bean.dto.NoteItemCreateInfo;
 import com.dwarfeng.familyhelper.note.stack.bean.dto.NoteItemUpdateInfo;
@@ -55,9 +56,9 @@ public class NoteItemOperateServiceImpl implements NoteItemOperateService {
     }
 
     @Override
-    public void downloadNoteFile(StringIdKey userKey, LongIdKey noteItemKey) throws ServiceException {
+    public NoteFile downloadNoteFile(StringIdKey userKey, LongIdKey noteItemKey) throws ServiceException {
         try {
-            noteItemOperateHandler.downloadNoteFile(userKey, noteItemKey);
+            return noteItemOperateHandler.downloadNoteFile(userKey, noteItemKey);
         } catch (Exception e) {
             throw ServiceExceptionHelper.logAndThrow("下载笔记文件时发生异常", LogLevel.WARN, sem, e);
         }
