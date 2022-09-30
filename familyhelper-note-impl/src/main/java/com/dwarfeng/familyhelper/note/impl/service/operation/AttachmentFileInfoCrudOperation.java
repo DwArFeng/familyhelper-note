@@ -67,12 +67,12 @@ public class AttachmentFileInfoCrudOperation implements BatchCrudOperation<LongI
 
     @Override
     public void delete(LongIdKey key) throws Exception {
-        // 如果存在个人最佳文件，则删除个人最佳文件。
+        // 如果存在附件文件，则删除附件文件。
         if (ftpHandler.existsFile(new String[]{FtpConstants.PATH_ATTACHMENT_FILE}, getFileName(key))) {
             ftpHandler.deleteFile(new String[]{FtpConstants.PATH_ATTACHMENT_FILE}, getFileName(key));
         }
 
-        // 删除个人最佳文件信息实体自身。
+        // 删除附件文件信息实体自身。
         attachmentFileInfoCache.delete(key);
         attachmentFileInfoDao.delete(key);
     }

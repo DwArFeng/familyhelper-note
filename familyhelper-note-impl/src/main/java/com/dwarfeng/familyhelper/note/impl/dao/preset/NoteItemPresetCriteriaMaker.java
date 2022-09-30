@@ -33,8 +33,8 @@ public class NoteItemPresetCriteriaMaker implements PresetCriteriaMaker {
             case NoteItemMaintainService.CHILD_FOR_NODE_INDEX_ASC:
                 childForNodeIndexAsc(detachedCriteria, objects);
                 break;
-            case NoteItemMaintainService.CHILD_FOR_BOOK_ROOT_INDEX_ASC:
-                childForBookRootIndexAsc(detachedCriteria, objects);
+            case NoteItemMaintainService.CHILD_FOR_NODE_INDEX_DESC:
+                childForNodeIndexDesc(detachedCriteria, objects);
                 break;
             default:
                 throw new IllegalArgumentException("无法识别的预设: " + s);
@@ -113,18 +113,17 @@ public class NoteItemPresetCriteriaMaker implements PresetCriteriaMaker {
         }
     }
 
-    private void childForBookRootIndexAsc(DetachedCriteria detachedCriteria, Object[] objects) {
+    private void childForNodeIndexDesc(DetachedCriteria detachedCriteria, Object[] objects) {
         try {
             if (Objects.isNull(objects[0])) {
-                detachedCriteria.add(Restrictions.isNull("bookLongId"));
+                detachedCriteria.add(Restrictions.isNull("nodeLongId"));
             } else {
                 LongIdKey longIdKey = (LongIdKey) objects[0];
                 detachedCriteria.add(
-                        Restrictions.eqOrIsNull("bookLongId", longIdKey.getLongId())
+                        Restrictions.eqOrIsNull("nodeLongId", longIdKey.getLongId())
                 );
             }
-            detachedCriteria.add(Restrictions.isNull("nodeLongId"));
-            detachedCriteria.addOrder(Order.asc("index"));
+            detachedCriteria.addOrder(Order.desc("index"));
         } catch (Exception e) {
             throw new IllegalArgumentException("非法的参数:" + Arrays.toString(objects));
         }

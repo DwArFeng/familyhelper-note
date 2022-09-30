@@ -1,11 +1,13 @@
 package com.dwarfeng.familyhelper.note.impl.service.operation;
 
+import com.dwarfeng.familyhelper.note.impl.util.FtpConstants;
 import com.dwarfeng.familyhelper.note.stack.bean.entity.AttachmentFileInfo;
 import com.dwarfeng.familyhelper.note.stack.bean.entity.NoteItem;
 import com.dwarfeng.familyhelper.note.stack.cache.NoteItemCache;
 import com.dwarfeng.familyhelper.note.stack.dao.AttachmentFileInfoDao;
 import com.dwarfeng.familyhelper.note.stack.dao.NoteItemDao;
 import com.dwarfeng.familyhelper.note.stack.service.AttachmentFileInfoMaintainService;
+import com.dwarfeng.ftp.handler.FtpHandler;
 import com.dwarfeng.subgrade.sdk.exception.ServiceExceptionCodes;
 import com.dwarfeng.subgrade.sdk.service.custom.operation.BatchCrudOperation;
 import com.dwarfeng.subgrade.stack.bean.key.LongIdKey;
@@ -25,17 +27,21 @@ public class NoteItemCrudOperation implements BatchCrudOperation<LongIdKey, Note
     private final AttachmentFileInfoCrudOperation attachmentFileInfoCrudOperation;
     private final AttachmentFileInfoDao attachmentFileInfoDao;
 
+    private final FtpHandler ftpHandler;
+
     @Value("${cache.timeout.entity.note_item}")
     private long noteItemTimeout;
 
     public NoteItemCrudOperation(
             NoteItemDao noteItemDao, NoteItemCache noteItemCache,
-            AttachmentFileInfoCrudOperation attachmentFileInfoCrudOperation, AttachmentFileInfoDao attachmentFileInfoDao
+            AttachmentFileInfoCrudOperation attachmentFileInfoCrudOperation, AttachmentFileInfoDao attachmentFileInfoDao,
+            FtpHandler ftpHandler
     ) {
         this.noteItemDao = noteItemDao;
         this.noteItemCache = noteItemCache;
         this.attachmentFileInfoCrudOperation = attachmentFileInfoCrudOperation;
         this.attachmentFileInfoDao = attachmentFileInfoDao;
+        this.ftpHandler = ftpHandler;
     }
 
     @Override
@@ -71,15 +77,24 @@ public class NoteItemCrudOperation implements BatchCrudOperation<LongIdKey, Note
 
     @Override
     public void delete(LongIdKey key) throws Exception {
-        // 查找删除除所有相关的个人最佳记录。
+        // 如果存在笔记文件，则删除笔记文件。
+        if (ftpHandler.existsFile(new String[]{FtpConstants.PATH_NOTE_FILE}, getFileName(key))) {
+            ftpHandler.deleteFile(new String[]{FtpConstants.PATH_NOTE_FILE}, getFileName(key));
+        }
+
+        // 查找删除除所有相关的笔记记录。
         List<LongIdKey> attachmentFileInfoKeys = attachmentFileInfoDao.lookup(
                 AttachmentFileInfoMaintainService.CHILD_FOR_NOTE_ITEM, new Object[]{key}
         ).stream().map(AttachmentFileInfo::getKey).collect(Collectors.toList());
         attachmentFileInfoCrudOperation.batchDelete(attachmentFileInfoKeys);
 
-        // 删除个人最佳项目自身。
+        // 删除笔记项目自身。
         noteItemCache.delete(key);
         noteItemDao.delete(key);
+    }
+
+    private String getFileName(LongIdKey noteFileKey) {
+        return Long.toString(noteFileKey.getLongId());
     }
 
     @Override

@@ -8,6 +8,7 @@ package com.dwarfeng.familyhelper.note.impl.util;
  */
 public final class FtpConstants {
 
+    public static final String PATH_NOTE_FILE = "familyhelper-note/note-file";
     public static final String PATH_ATTACHMENT_FILE = "familyhelper-note/attachment-file";
 
     private FtpConstants() {
