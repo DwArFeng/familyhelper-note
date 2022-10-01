@@ -99,7 +99,7 @@ public class NoteBookCrudOperation implements BatchCrudOperation<LongIdKey, Note
 
         // 删除与个人最佳集合相关的个人最佳集合节点。
         List<LongIdKey> noteNodeKeys = noteNodeDao.lookup(
-                NoteNodeMaintainService.CHILD_FOR_BOOK, new Object[]{key}
+                NoteNodeMaintainService.CHILD_FOR_BOOK_ROOT, new Object[]{key}
         ).stream().map(NoteNode::getKey).collect(Collectors.toList());
         noteNodeCrudOperation.batchDelete(noteNodeKeys);
 
