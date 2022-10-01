@@ -112,9 +112,6 @@ public class NoteItemOperateHandlerImpl implements NoteItemOperateHandler {
             // 确认用户存在。
             operateHandlerValidator.makeSureUserExists(userKey);
 
-            // 确认笔记节点存在。
-            operateHandlerValidator.makeSureNoteNodeExists(noteNodeKey);
-
             // 确认笔记项目存在。
             operateHandlerValidator.makeSureNoteItemExists(noteItemKey);
             NoteItem noteItem = noteItemMaintainService.get(noteItemKey);
