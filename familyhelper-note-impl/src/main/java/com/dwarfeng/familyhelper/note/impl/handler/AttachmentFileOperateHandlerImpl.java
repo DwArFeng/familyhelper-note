@@ -227,10 +227,7 @@ public class AttachmentFileOperateHandlerImpl implements AttachmentFileOperateHa
             operateHandlerValidator.makeSureAttachmentFileInfoExists(attachmentFileKey);
 
             // 获取附件文件对应的项目，并确认用户有权限操作项目。
-            AttachmentFileInfo attachmentFileInfo = attachmentFileInfoMaintainService.get(attachmentFileKey);
-            operateHandlerValidator.makeSureUserModifyPermittedForAttachmentFileInfo(
-                    userKey, attachmentFileInfo.getNoteItemKey()
-            );
+            operateHandlerValidator.makeSureUserModifyPermittedForAttachmentFileInfo(userKey, attachmentFileKey);
 
             // 如果存在 AttachmentFile 文件，则删除。
             if (ftpHandler.existsFile(
