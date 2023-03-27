@@ -12,7 +12,7 @@
 
 #### Bug修复
 
-- (无)
+- 修复 `NoteNodeCrudOperation` 删除实体方法的逻辑错误。
 
 #### 功能移除
 

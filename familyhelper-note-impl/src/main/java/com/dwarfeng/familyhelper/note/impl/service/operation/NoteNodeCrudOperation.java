@@ -15,7 +15,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Stack;
 import java.util.stream.Collectors;
 
 @Component
@@ -73,32 +75,49 @@ public class NoteNodeCrudOperation implements BatchCrudOperation<LongIdKey, Note
 
     @Override
     public void delete(LongIdKey key) throws Exception {
-        // 递归寻找并删除个人最佳节点自身的子孙节点。
-        List<NoteNode> descendantNoteNodes = new ArrayList<>();
-        findDescendant(descendantNoteNodes, noteNodeDao.get(key));
-        descendantNoteNodes.forEach((noteNode -> noteNode.setParentKey(null)));
-        noteNodeDao.batchUpdate(descendantNoteNodes);
-        List<LongIdKey> descendantNoteNodeKeys = descendantNoteNodes.stream().map(NoteNode::getKey).collect(Collectors.toList());
-        noteNodeCache.batchDelete(descendantNoteNodeKeys);
-        noteNodeDao.batchDelete(descendantNoteNodeKeys);
+        // 寻找自身的子孙节点和子孙条目。
+        DescendantStruct descendantStruct = findDescendant(key);
 
-        // 查找删除除所有相关的个人最佳项目。
-        List<LongIdKey> noteItemKeys = noteItemDao.lookup(
-                NoteItemMaintainService.CHILD_FOR_NODE, new Object[]{key}
-        ).stream().map(NoteItem::getKey).collect(Collectors.toList());
+        // 依次删除子孙条目和子孙节点。
+        List<LongIdKey> noteItemKeys = descendantStruct.getNoteItemKeys();
         noteItemCrudOperation.batchDelete(noteItemKeys);
-
-        // 删除个人最佳节点自身。
-        noteNodeCache.delete(key);
-        noteNodeDao.delete(key);
+        List<LongIdKey> noteNodeKeys = descendantStruct.getNoteNodeKeys();
+        noteNodeCache.batchDelete(noteNodeKeys);
+        noteNodeDao.batchDelete(noteNodeKeys);
     }
 
-    private void findDescendant(List<NoteNode> descendantNoteNodeKeys, NoteNode noteNode) throws Exception {
-        List<NoteNode> childNoteNodes = noteNodeDao.lookup(NoteNodeMaintainService.CHILD_FOR_PARENT, new Object[]{noteNode.getKey()});
-        for (NoteNode childNoteNode : childNoteNodes) {
-            descendantNoteNodeKeys.add(childNoteNode);
-            findDescendant(descendantNoteNodeKeys, childNoteNode);
+    private DescendantStruct findDescendant(LongIdKey key) throws Exception {
+        // 本方法使用递归形式，并转化为迭代。
+
+        // 定义结果变量。
+        List<LongIdKey> noteNodeKeys = new LinkedList<>();
+        List<LongIdKey> noteItemKeys = new ArrayList<>();
+
+        // 定义一个栈，并初始化。
+        Stack<LongIdKey> noteNodeStack = new Stack<>();
+        noteNodeStack.push(key);
+
+        // 在栈清空之前，一直执行循环。
+        while (!noteNodeStack.isEmpty()) {
+            // 从栈中取出当前的节点。
+            LongIdKey noteNodeKey = noteNodeStack.pop();
+            // 查询节点的子节点。
+            List<LongIdKey> childNoteNodeKeys = noteNodeDao.lookup(
+                    NoteNodeMaintainService.CHILD_FOR_PARENT, new Object[]{noteNodeKey}
+            ).stream().map(NoteNode::getKey).collect(Collectors.toList());
+            // 查询节点的子条目。
+            List<LongIdKey> childNoteItemKeys = noteItemDao.lookup(
+                    NoteItemMaintainService.CHILD_FOR_NODE, new Object[]{noteNodeKey}
+            ).stream().map(NoteItem::getKey).collect(Collectors.toList());
+            // 将结果添加到结果变量中（插入到最前面）。
+            noteNodeKeys.add(0, noteNodeKey);
+            noteItemKeys.addAll(childNoteItemKeys);
+            // 向栈中推送节点的子节点。
+            childNoteNodeKeys.forEach(noteNodeStack::push);
         }
+
+        // 返回结果。
+        return new DescendantStruct(noteNodeKeys, noteItemKeys);
     }
 
     @Override
@@ -141,6 +160,33 @@ public class NoteNodeCrudOperation implements BatchCrudOperation<LongIdKey, Note
     public void batchDelete(List<LongIdKey> keys) throws Exception {
         for (LongIdKey key : keys) {
             delete(key);
+        }
+    }
+
+    private static final class DescendantStruct {
+
+        private final List<LongIdKey> noteNodeKeys;
+        private final List<LongIdKey> noteItemKeys;
+
+        private DescendantStruct(List<LongIdKey> noteNodeKeys, List<LongIdKey> noteItemKeys) {
+            this.noteNodeKeys = noteNodeKeys;
+            this.noteItemKeys = noteItemKeys;
+        }
+
+        public List<LongIdKey> getNoteNodeKeys() {
+            return noteNodeKeys;
+        }
+
+        public List<LongIdKey> getNoteItemKeys() {
+            return noteItemKeys;
+        }
+
+        @Override
+        public String toString() {
+            return "DescendantStruct{" +
+                    "noteNodeKeys=" + noteNodeKeys +
+                    ", noteItemKeys=" + noteItemKeys +
+                    '}';
         }
     }
 }
