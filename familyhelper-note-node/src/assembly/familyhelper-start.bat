@@ -1,7 +1,7 @@
 @echo off
 
 rem 程序的根目录
-SET basedir=C:\Program Files\notify
+SET basedir=C:\Program Files\familyhelper-note
 rem 日志的根目录
 SET logdir=%basedir%\logs
 
