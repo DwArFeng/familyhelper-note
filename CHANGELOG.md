@@ -16,7 +16,7 @@
 
 #### Bug修复
 
-- (无)
+- 补全 `application-context-placeholder.xml` 中的本地文件覆盖路径。
 
 #### 功能移除
 
