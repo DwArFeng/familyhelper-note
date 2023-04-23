@@ -26,27 +26,62 @@
     <dubbo:provider protocol="dubbo"/>
 
     <!-- 向注册中心注册暴露服务地址,注册服务 -->
-    <dubbo:service interface="com.dwarfeng.familyhelper.note.stack.service.UserMaintainService"
-                   ref="userMaintainServiceImpl"/>
-    <dubbo:service interface="com.dwarfeng.familyhelper.note.stack.service.PonbMaintainService"
-                   ref="ponbMaintainServiceImpl"/>
-    <dubbo:service interface="com.dwarfeng.familyhelper.note.stack.service.NoteBookMaintainService"
-                   ref="noteBookMaintainServiceImpl"/>
-    <dubbo:service interface="com.dwarfeng.familyhelper.note.stack.service.NoteBookOperateService"
-                   ref="noteBookOperateServiceImpl"/>
-    <dubbo:service interface="com.dwarfeng.familyhelper.note.stack.service.NoteNodeMaintainService"
-                   ref="noteNodeMaintainServiceImpl"/>
-    <dubbo:service interface="com.dwarfeng.familyhelper.note.stack.service.NoteNodeOperateService"
-                   ref="noteNodeOperateServiceImpl"/>
-    <dubbo:service interface="com.dwarfeng.familyhelper.note.stack.service.NoteItemMaintainService"
-                   ref="noteItemMaintainServiceImpl"/>
-    <dubbo:service interface="com.dwarfeng.familyhelper.note.stack.service.NoteItemOperateService"
-                   ref="noteItemOperateServiceImpl"/>
-    <dubbo:service interface="com.dwarfeng.familyhelper.note.stack.service.AttachmentFileInfoMaintainService"
-                   ref="attachmentFileInfoMaintainServiceImpl"/>
-    <dubbo:service interface="com.dwarfeng.familyhelper.note.stack.service.AttachmentFileOperateService"
-                   ref="attachmentFileOperateServiceImpl"/>
+    <dubbo:service
+            interface="com.dwarfeng.familyhelper.note.stack.service.UserMaintainService"
+            ref="userMaintainServiceImpl"
+            group="${dubbo.provider.group}"
+    />
+    <dubbo:service
+            interface="com.dwarfeng.familyhelper.note.stack.service.PonbMaintainService"
+            ref="ponbMaintainServiceImpl"
+            group="${dubbo.provider.group}"
+    />
+    <dubbo:service
+            interface="com.dwarfeng.familyhelper.note.stack.service.NoteBookMaintainService"
+            ref="noteBookMaintainServiceImpl"
+            group="${dubbo.provider.group}"
+    />
+    <dubbo:service
+            interface="com.dwarfeng.familyhelper.note.stack.service.NoteBookOperateService"
+            ref="noteBookOperateServiceImpl"
+            group="${dubbo.provider.group}"
+    />
+    <dubbo:service
+            interface="com.dwarfeng.familyhelper.note.stack.service.NoteNodeMaintainService"
+            ref="noteNodeMaintainServiceImpl"
+            group="${dubbo.provider.group}"
+    />
+    <dubbo:service
+            interface="com.dwarfeng.familyhelper.note.stack.service.NoteNodeOperateService"
+            ref="noteNodeOperateServiceImpl"
+            group="${dubbo.provider.group}"
+    />
+    <dubbo:service
+            interface="com.dwarfeng.familyhelper.note.stack.service.NoteItemMaintainService"
+            ref="noteItemMaintainServiceImpl"
+            group="${dubbo.provider.group}"
+    />
+    <dubbo:service
+            interface="com.dwarfeng.familyhelper.note.stack.service.NoteItemOperateService"
+            ref="noteItemOperateServiceImpl"
+            group="${dubbo.provider.group}"
+    />
+    <dubbo:service
+            interface="com.dwarfeng.familyhelper.note.stack.service.AttachmentFileInfoMaintainService"
+            ref="attachmentFileInfoMaintainServiceImpl"
+            group="${dubbo.provider.group}"
+    />
+    <dubbo:service
+            interface="com.dwarfeng.familyhelper.note.stack.service.AttachmentFileOperateService"
+            ref="attachmentFileOperateServiceImpl"
+            group="${dubbo.provider.group}"
+    />
 
     <!-- 向注册中心注册暴露服务地址,注册消费者服务 -->
-    <dubbo:reference id="longIdService" interface="com.dwarfeng.sfds.stack.service.LongIdService"/>
+    <dubbo:reference
+            id="longIdService"
+            interface="com.dwarfeng.sfds.stack.service.LongIdService" retries="3"
+            timeout="1000"
+            group="${dubbo.consumer.snowflake.group}"
+    />
 </beans>
