@@ -4,6 +4,12 @@
 
 #### 功能构建
 
+- 增加预设查询。
+  - NoteItemMaintainService.CHILD_FOR_BOOK_NAME_LIKE。
+  - NoteItemMaintainService.CHILD_FOR_BOOK_ROOT_INDEX_ASC。
+  - NoteItemMaintainService.CHILD_FOR_BOOK_ROOT_INDEX_DESC。
+  - NoteNodeMaintainService.CHILD_FOR_BOOK_NAME_LIKE。
+
 - Dubbo 微服务增加分组配置。
 
 - 依赖升级。

@@ -19,4 +19,5 @@ public interface NoteNodeMaintainService extends BatchCrudService<LongIdKey, Not
     String CHILD_FOR_BOOK = "child_for_book";
     String CHILD_FOR_BOOK_ROOT = "child_for_book_root";
     String NAME_LIKE = "name_like";
+    String CHILD_FOR_BOOK_NAME_LIKE = "child_for_book_name_like";
 }
