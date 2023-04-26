@@ -4,6 +4,8 @@
 
 #### 功能构建
 
+- 优化 Mapper 接口的文件路径。
+
 - 增加预设查询。
   - NoteItemMaintainService.CHILD_FOR_BOOK_NAME_LIKE。
   - NoteItemMaintainService.CHILD_FOR_BOOK_ROOT_INDEX_ASC。

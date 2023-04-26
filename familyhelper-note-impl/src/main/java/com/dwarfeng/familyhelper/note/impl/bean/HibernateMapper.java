@@ -1,5 +1,6 @@
-package com.dwarfeng.familyhelper.note.impl.bean.entity;
+package com.dwarfeng.familyhelper.note.impl.bean;
 
+import com.dwarfeng.familyhelper.note.impl.bean.entity.*;
 import com.dwarfeng.familyhelper.note.impl.bean.key.HibernatePonbKey;
 import com.dwarfeng.familyhelper.note.stack.bean.entity.*;
 import com.dwarfeng.familyhelper.note.stack.bean.key.PonbKey;

@@ -1,5 +1,6 @@
-package com.dwarfeng.familyhelper.note.sdk.bean.entity;
+package com.dwarfeng.familyhelper.note.sdk.bean;
 
+import com.dwarfeng.familyhelper.note.sdk.bean.entity.*;
 import com.dwarfeng.familyhelper.note.sdk.bean.key.FastJsonPonbKey;
 import com.dwarfeng.familyhelper.note.stack.bean.entity.*;
 import com.dwarfeng.familyhelper.note.stack.bean.key.PonbKey;

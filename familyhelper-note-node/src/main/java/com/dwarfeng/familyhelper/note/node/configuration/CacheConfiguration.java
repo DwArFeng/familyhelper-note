@@ -1,5 +1,6 @@
 package com.dwarfeng.familyhelper.note.node.configuration;
 
+import com.dwarfeng.familyhelper.note.sdk.bean.FastJsonMapper;
 import com.dwarfeng.familyhelper.note.sdk.bean.entity.*;
 import com.dwarfeng.familyhelper.note.sdk.bean.key.formatter.PonbStringKeyFormatter;
 import com.dwarfeng.familyhelper.note.stack.bean.entity.*;

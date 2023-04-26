@@ -1,5 +1,6 @@
 package com.dwarfeng.familyhelper.note.node.configuration;
 
+import com.dwarfeng.familyhelper.note.impl.bean.HibernateMapper;
 import com.dwarfeng.familyhelper.note.impl.bean.entity.*;
 import com.dwarfeng.familyhelper.note.impl.bean.key.HibernatePonbKey;
 import com.dwarfeng.familyhelper.note.impl.dao.preset.*;
