@@ -4,6 +4,8 @@
 
 #### 功能构建
 
+- 优化启停脚本的目录结构。
+
 - 优化 `application-context-*.xml` 中的格式。
   - application-context-dubbo.xml。
 
