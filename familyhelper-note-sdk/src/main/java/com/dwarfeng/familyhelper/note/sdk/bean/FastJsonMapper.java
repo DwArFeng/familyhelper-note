@@ -1,8 +1,10 @@
 package com.dwarfeng.familyhelper.note.sdk.bean;
 
 import com.dwarfeng.familyhelper.note.sdk.bean.entity.*;
+import com.dwarfeng.familyhelper.note.sdk.bean.key.FastJsonFavoriteKey;
 import com.dwarfeng.familyhelper.note.sdk.bean.key.FastJsonPonbKey;
 import com.dwarfeng.familyhelper.note.stack.bean.entity.*;
+import com.dwarfeng.familyhelper.note.stack.bean.key.FavoriteKey;
 import com.dwarfeng.familyhelper.note.stack.bean.key.PonbKey;
 import com.dwarfeng.subgrade.sdk.bean.key.FastJsonLongIdKey;
 import com.dwarfeng.subgrade.sdk.bean.key.FastJsonStringIdKey;
@@ -35,6 +37,11 @@ public interface FastJsonMapper {
     @InheritInverseConfiguration
     PonbKey ponbKeyFromFastJson(FastJsonPonbKey fastJsonPonbKey);
 
+    FastJsonFavoriteKey favoriteKeyToFastJson(FavoriteKey favoriteKey);
+
+    @InheritInverseConfiguration
+    FavoriteKey favoriteKeyFromFastJson(FastJsonFavoriteKey fastJsonFavoriteKey);
+
     FastJsonPonb ponbToFastJson(Ponb ponb);
 
     @InheritInverseConfiguration
@@ -64,4 +71,9 @@ public interface FastJsonMapper {
 
     @InheritInverseConfiguration
     User userFromFastJson(FastJsonUser fastJsonUser);
+
+    FastJsonFavorite favoriteToFastJson(Favorite favorite);
+
+    @InheritInverseConfiguration
+    Favorite favoriteFromFastJson(FastJsonFavorite fastJsonFavorite);
 }

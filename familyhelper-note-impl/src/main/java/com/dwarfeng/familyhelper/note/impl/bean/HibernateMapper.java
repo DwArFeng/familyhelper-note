@@ -1,8 +1,10 @@
 package com.dwarfeng.familyhelper.note.impl.bean;
 
 import com.dwarfeng.familyhelper.note.impl.bean.entity.*;
+import com.dwarfeng.familyhelper.note.impl.bean.key.HibernateFavoriteKey;
 import com.dwarfeng.familyhelper.note.impl.bean.key.HibernatePonbKey;
 import com.dwarfeng.familyhelper.note.stack.bean.entity.*;
+import com.dwarfeng.familyhelper.note.stack.bean.key.FavoriteKey;
 import com.dwarfeng.familyhelper.note.stack.bean.key.PonbKey;
 import com.dwarfeng.subgrade.sdk.bean.key.HibernateLongIdKey;
 import com.dwarfeng.subgrade.sdk.bean.key.HibernateStringIdKey;
@@ -36,6 +38,11 @@ public interface HibernateMapper {
     @InheritInverseConfiguration
     PonbKey ponbKeyFromHibernate(HibernatePonbKey hibernatePonbKey);
 
+    HibernateFavoriteKey favoriteKeyToHibernate(FavoriteKey favoriteKey);
+
+    @InheritInverseConfiguration
+    FavoriteKey favoriteKeyFromHibernate(HibernateFavoriteKey hibernateFavoriteKey);
+
     @Mapping(target = "userStringId", ignore = true)
     @Mapping(target = "user", ignore = true)
     @Mapping(target = "noteBookLongId", ignore = true)
@@ -45,6 +52,7 @@ public interface HibernateMapper {
     @InheritInverseConfiguration
     Ponb ponbFromHibernate(HibernatePonb hibernatePonb);
 
+    @Mapping(target = "favorites", ignore = true)
     @Mapping(target = "ponbs", ignore = true)
     @Mapping(target = "nodes", ignore = true)
     @Mapping(target = "longId", ignore = true)
@@ -84,10 +92,20 @@ public interface HibernateMapper {
     @InheritInverseConfiguration
     AttachmentFileInfo attachmentFileInfoFromHibernate(HibernateAttachmentFileInfo hibernateAttachmentFileInfo);
 
+    @Mapping(target = "favorites", ignore = true)
     @Mapping(target = "stringId", ignore = true)
     @Mapping(target = "ponbs", ignore = true)
     HibernateUser userToHibernate(User user);
 
     @InheritInverseConfiguration
     User userFromHibernate(HibernateUser hibernateUser);
+
+    @Mapping(target = "userStringId", ignore = true)
+    @Mapping(target = "user", ignore = true)
+    @Mapping(target = "noteBookLongId", ignore = true)
+    @Mapping(target = "noteBook", ignore = true)
+    HibernateFavorite favoriteToHibernate(Favorite favorite);
+
+    @InheritInverseConfiguration
+    Favorite favoriteFromHibernate(HibernateFavorite hibernateFavorite);
 }

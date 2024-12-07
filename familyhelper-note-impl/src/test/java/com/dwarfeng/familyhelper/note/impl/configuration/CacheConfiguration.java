@@ -2,8 +2,10 @@ package com.dwarfeng.familyhelper.note.impl.configuration;
 
 import com.dwarfeng.familyhelper.note.sdk.bean.FastJsonMapper;
 import com.dwarfeng.familyhelper.note.sdk.bean.entity.*;
+import com.dwarfeng.familyhelper.note.sdk.bean.key.formatter.FavoriteStringKeyFormatter;
 import com.dwarfeng.familyhelper.note.sdk.bean.key.formatter.PonbStringKeyFormatter;
 import com.dwarfeng.familyhelper.note.stack.bean.entity.*;
+import com.dwarfeng.familyhelper.note.stack.bean.key.FavoriteKey;
 import com.dwarfeng.familyhelper.note.stack.bean.key.PonbKey;
 import com.dwarfeng.subgrade.impl.bean.MapStructBeanTransformer;
 import com.dwarfeng.subgrade.impl.cache.RedisBatchBaseCache;
@@ -33,6 +35,8 @@ public class CacheConfiguration {
     private String noteItemPrefix;
     @Value("${cache.prefix.entity.attachment_file_info}")
     private String attachmentFileInfoPrefix;
+    @Value("${cache.prefix.entity.favorite}")
+    private String favoritePrefix;
 
     public CacheConfiguration(RedisTemplate<String, ?> template) {
         this.template = template;
@@ -98,6 +102,16 @@ public class CacheConfiguration {
                 new MapStructBeanTransformer<>(
                         AttachmentFileInfo.class, FastJsonAttachmentFileInfo.class, FastJsonMapper.class
                 )
+        );
+    }
+
+    @Bean
+    @SuppressWarnings("unchecked")
+    public RedisBatchBaseCache<FavoriteKey, Favorite, FastJsonFavorite> favoriteRedisBatchBaseCache() {
+        return new RedisBatchBaseCache<>(
+                (RedisTemplate<String, FastJsonFavorite>) template,
+                new FavoriteStringKeyFormatter(favoritePrefix),
+                new MapStructBeanTransformer<>(Favorite.class, FastJsonFavorite.class, FastJsonMapper.class)
         );
     }
 }

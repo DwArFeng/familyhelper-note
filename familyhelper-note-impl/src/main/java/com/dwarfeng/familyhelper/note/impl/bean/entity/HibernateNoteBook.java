@@ -15,7 +15,7 @@ import java.util.Set;
 @Table(name = "tbl_note_book")
 public class HibernateNoteBook implements Bean {
 
-    private static final long serialVersionUID = 4413690131391904574L;
+    private static final long serialVersionUID = 6236193980009853848L;
 
     // -----------------------------------------------------------主键-----------------------------------------------------------
     @Id
@@ -53,6 +53,9 @@ public class HibernateNoteBook implements Bean {
 
     @OneToMany(cascade = CascadeType.MERGE, targetEntity = HibernatePonb.class, mappedBy = "noteBook")
     private Set<HibernatePonb> ponbs = new HashSet<>();
+
+    @OneToMany(cascade = CascadeType.MERGE, targetEntity = HibernateFavorite.class, mappedBy = "noteBook")
+    private Set<HibernateFavorite> favorites = new HashSet<>();
 
     public HibernateNoteBook() {
     }
@@ -145,6 +148,14 @@ public class HibernateNoteBook implements Bean {
 
     public void setPonbs(Set<HibernatePonb> ponbs) {
         this.ponbs = ponbs;
+    }
+
+    public Set<HibernateFavorite> getFavorites() {
+        return favorites;
+    }
+
+    public void setFavorites(Set<HibernateFavorite> favorites) {
+        this.favorites = favorites;
     }
 
     @Override

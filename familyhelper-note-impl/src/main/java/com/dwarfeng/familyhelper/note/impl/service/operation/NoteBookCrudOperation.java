@@ -1,16 +1,13 @@
 package com.dwarfeng.familyhelper.note.impl.service.operation;
 
-import com.dwarfeng.familyhelper.note.stack.bean.entity.NoteBook;
-import com.dwarfeng.familyhelper.note.stack.bean.entity.NoteItem;
-import com.dwarfeng.familyhelper.note.stack.bean.entity.NoteNode;
-import com.dwarfeng.familyhelper.note.stack.bean.entity.Ponb;
+import com.dwarfeng.familyhelper.note.stack.bean.entity.*;
+import com.dwarfeng.familyhelper.note.stack.bean.key.FavoriteKey;
 import com.dwarfeng.familyhelper.note.stack.bean.key.PonbKey;
+import com.dwarfeng.familyhelper.note.stack.cache.FavoriteCache;
 import com.dwarfeng.familyhelper.note.stack.cache.NoteBookCache;
 import com.dwarfeng.familyhelper.note.stack.cache.PonbCache;
-import com.dwarfeng.familyhelper.note.stack.dao.NoteBookDao;
-import com.dwarfeng.familyhelper.note.stack.dao.NoteItemDao;
-import com.dwarfeng.familyhelper.note.stack.dao.NoteNodeDao;
-import com.dwarfeng.familyhelper.note.stack.dao.PonbDao;
+import com.dwarfeng.familyhelper.note.stack.dao.*;
+import com.dwarfeng.familyhelper.note.stack.service.FavoriteMaintainService;
 import com.dwarfeng.familyhelper.note.stack.service.NoteItemMaintainService;
 import com.dwarfeng.familyhelper.note.stack.service.NoteNodeMaintainService;
 import com.dwarfeng.familyhelper.note.stack.service.PonbMaintainService;
@@ -39,14 +36,23 @@ public class NoteBookCrudOperation implements BatchCrudOperation<LongIdKey, Note
     private final NoteNodeDao noteNodeDao;
     private final NoteNodeCrudOperation noteNodeCrudOperation;
 
+    private final FavoriteDao favoriteDao;
+    private final FavoriteCache favoriteCache;
+
     @Value("${cache.timeout.entity.note_book}")
     private long noteBookTimeout;
 
     public NoteBookCrudOperation(
-            NoteBookDao noteBookDao, NoteBookCache noteBookCache,
-            PonbDao ponbDao, PonbCache ponbCache,
-            NoteItemDao noteItemDao, NoteItemCrudOperation noteItemCrudOperation,
-            NoteNodeDao noteNodeDao, NoteNodeCrudOperation noteNodeCrudOperation
+            NoteBookDao noteBookDao,
+            NoteBookCache noteBookCache,
+            PonbDao ponbDao,
+            PonbCache ponbCache,
+            NoteItemDao noteItemDao,
+            NoteItemCrudOperation noteItemCrudOperation,
+            NoteNodeDao noteNodeDao,
+            NoteNodeCrudOperation noteNodeCrudOperation,
+            FavoriteDao favoriteDao,
+            FavoriteCache favoriteCache
     ) {
         this.noteBookDao = noteBookDao;
         this.noteBookCache = noteBookCache;
@@ -56,6 +62,8 @@ public class NoteBookCrudOperation implements BatchCrudOperation<LongIdKey, Note
         this.noteItemCrudOperation = noteItemCrudOperation;
         this.noteNodeDao = noteNodeDao;
         this.noteNodeCrudOperation = noteNodeCrudOperation;
+        this.favoriteDao = favoriteDao;
+        this.favoriteCache = favoriteCache;
     }
 
     @Override
@@ -108,6 +116,14 @@ public class NoteBookCrudOperation implements BatchCrudOperation<LongIdKey, Note
                 .stream().map(Ponb::getKey).collect(Collectors.toList());
         ponbCache.batchDelete(ponbKeys);
         ponbDao.batchDelete(ponbKeys);
+
+        // 删除与个人最佳集合相关的个人最佳集合权限。
+        List<FavoriteKey> favoriteKeys = favoriteDao.lookup(
+                        FavoriteMaintainService.CHILD_FOR_NOTE_BOOK, new Object[]{key}
+                )
+                .stream().map(Favorite::getKey).collect(Collectors.toList());
+        favoriteCache.batchDelete(favoriteKeys);
+        favoriteDao.batchDelete(favoriteKeys);
 
         // 删除个人最佳集合实体自身。
         noteBookCache.delete(key);

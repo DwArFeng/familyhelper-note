@@ -1,12 +1,17 @@
 package com.dwarfeng.familyhelper.note.impl.service.operation;
 
+import com.dwarfeng.familyhelper.note.stack.bean.entity.Favorite;
 import com.dwarfeng.familyhelper.note.stack.bean.entity.Ponb;
 import com.dwarfeng.familyhelper.note.stack.bean.entity.User;
+import com.dwarfeng.familyhelper.note.stack.bean.key.FavoriteKey;
 import com.dwarfeng.familyhelper.note.stack.bean.key.PonbKey;
+import com.dwarfeng.familyhelper.note.stack.cache.FavoriteCache;
 import com.dwarfeng.familyhelper.note.stack.cache.PonbCache;
 import com.dwarfeng.familyhelper.note.stack.cache.UserCache;
+import com.dwarfeng.familyhelper.note.stack.dao.FavoriteDao;
 import com.dwarfeng.familyhelper.note.stack.dao.PonbDao;
 import com.dwarfeng.familyhelper.note.stack.dao.UserDao;
+import com.dwarfeng.familyhelper.note.stack.service.FavoriteMaintainService;
 import com.dwarfeng.familyhelper.note.stack.service.PonbMaintainService;
 import com.dwarfeng.subgrade.sdk.exception.ServiceExceptionCodes;
 import com.dwarfeng.subgrade.sdk.service.custom.operation.BatchCrudOperation;
@@ -27,17 +32,26 @@ public class UserCrudOperation implements BatchCrudOperation<StringIdKey, User> 
     private final PonbDao ponbDao;
     private final PonbCache ponbCache;
 
+    private final FavoriteDao favoriteDao;
+    private final FavoriteCache favoriteCache;
+
     @Value("${cache.timeout.entity.user}")
     private long userTimeout;
 
     public UserCrudOperation(
-            UserDao userDao, UserCache userCache,
-            PonbDao ponbDao, PonbCache ponbCache
+            UserDao userDao,
+            UserCache userCache,
+            PonbDao ponbDao,
+            PonbCache ponbCache,
+            FavoriteDao favoriteDao,
+            FavoriteCache favoriteCache
     ) {
         this.userDao = userDao;
         this.userCache = userCache;
         this.ponbDao = ponbDao;
         this.ponbCache = ponbCache;
+        this.favoriteDao = favoriteDao;
+        this.favoriteCache = favoriteCache;
     }
 
     @Override
@@ -78,6 +92,12 @@ public class UserCrudOperation implements BatchCrudOperation<StringIdKey, User> 
                 .stream().map(Ponb::getKey).collect(Collectors.toList());
         ponbCache.batchDelete(ponbKeys);
         ponbDao.batchDelete(ponbKeys);
+
+        // 删除与用户相关的个人最佳权限。
+        List<FavoriteKey> favoriteKeys = favoriteDao.lookup(FavoriteMaintainService.CHILD_FOR_USER, new Object[]{key})
+                .stream().map(Favorite::getKey).collect(Collectors.toList());
+        favoriteCache.batchDelete(favoriteKeys);
+        favoriteDao.batchDelete(favoriteKeys);
 
         // 删除用户实体自身。
         userCache.delete(key);

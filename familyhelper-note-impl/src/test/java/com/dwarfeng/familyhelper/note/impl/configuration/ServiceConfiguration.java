@@ -2,7 +2,9 @@ package com.dwarfeng.familyhelper.note.impl.configuration;
 
 import com.dwarfeng.familyhelper.note.impl.service.operation.*;
 import com.dwarfeng.familyhelper.note.stack.bean.entity.*;
+import com.dwarfeng.familyhelper.note.stack.bean.key.FavoriteKey;
 import com.dwarfeng.familyhelper.note.stack.bean.key.PonbKey;
+import com.dwarfeng.familyhelper.note.stack.cache.FavoriteCache;
 import com.dwarfeng.familyhelper.note.stack.cache.PonbCache;
 import com.dwarfeng.familyhelper.note.stack.dao.*;
 import com.dwarfeng.subgrade.impl.generation.ExceptionKeyGenerator;
@@ -34,9 +36,13 @@ public class ServiceConfiguration {
     private final NoteItemDao noteItemDao;
     private final AttachmentFileInfoCrudOperation attachmentFileInfoCrudOperation;
     private final AttachmentFileInfoDao attachmentFileInfoDao;
+    private final FavoriteDao favoriteDao;
+    private final FavoriteCache favoriteCache;
 
     @Value("${cache.timeout.entity.ponb}")
     private long ponbTimeout;
+    @Value("${cache.timeout.entity.favorite}")
+    private long favoriteTimeout;
 
     public ServiceConfiguration(
             ServiceExceptionMapperConfiguration serviceExceptionMapperConfiguration,
@@ -51,7 +57,9 @@ public class ServiceConfiguration {
             NoteItemCrudOperation noteItemCrudOperation,
             NoteItemDao noteItemDao,
             AttachmentFileInfoCrudOperation attachmentFileInfoCrudOperation,
-            AttachmentFileInfoDao attachmentFileInfoDao
+            AttachmentFileInfoDao attachmentFileInfoDao,
+            FavoriteDao favoriteDao,
+            FavoriteCache favoriteCache
     ) {
         this.serviceExceptionMapperConfiguration = serviceExceptionMapperConfiguration;
         this.generateConfiguration = generateConfiguration;
@@ -66,6 +74,8 @@ public class ServiceConfiguration {
         this.noteItemDao = noteItemDao;
         this.attachmentFileInfoCrudOperation = attachmentFileInfoCrudOperation;
         this.attachmentFileInfoDao = attachmentFileInfoDao;
+        this.favoriteDao = favoriteDao;
+        this.favoriteCache = favoriteCache;
     }
 
     @Bean
@@ -217,6 +227,36 @@ public class ServiceConfiguration {
                 serviceExceptionMapperConfiguration.mapServiceExceptionMapper(),
                 LogLevel.WARN,
                 attachmentFileInfoDao
+        );
+    }
+
+    @Bean
+    public GeneralBatchCrudService<FavoriteKey, Favorite> favoriteGeneralBatchCrudService() {
+        return new GeneralBatchCrudService<>(
+                serviceExceptionMapperConfiguration.mapServiceExceptionMapper(),
+                LogLevel.WARN,
+                favoriteDao,
+                favoriteCache,
+                new ExceptionKeyGenerator<>(),
+                favoriteTimeout
+        );
+    }
+
+    @Bean
+    public DaoOnlyEntireLookupService<Favorite> favoriteDaoOnlyEntireLookupService() {
+        return new DaoOnlyEntireLookupService<>(
+                serviceExceptionMapperConfiguration.mapServiceExceptionMapper(),
+                LogLevel.WARN,
+                favoriteDao
+        );
+    }
+
+    @Bean
+    public DaoOnlyPresetLookupService<Favorite> favoriteDaoOnlyPresetLookupService() {
+        return new DaoOnlyPresetLookupService<>(
+                serviceExceptionMapperConfiguration.mapServiceExceptionMapper(),
+                LogLevel.WARN,
+                favoriteDao
         );
     }
 }

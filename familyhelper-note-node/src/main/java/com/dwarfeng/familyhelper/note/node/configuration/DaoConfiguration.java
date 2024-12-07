@@ -2,9 +2,11 @@ package com.dwarfeng.familyhelper.note.node.configuration;
 
 import com.dwarfeng.familyhelper.note.impl.bean.HibernateMapper;
 import com.dwarfeng.familyhelper.note.impl.bean.entity.*;
+import com.dwarfeng.familyhelper.note.impl.bean.key.HibernateFavoriteKey;
 import com.dwarfeng.familyhelper.note.impl.bean.key.HibernatePonbKey;
 import com.dwarfeng.familyhelper.note.impl.dao.preset.*;
 import com.dwarfeng.familyhelper.note.stack.bean.entity.*;
+import com.dwarfeng.familyhelper.note.stack.bean.key.FavoriteKey;
 import com.dwarfeng.familyhelper.note.stack.bean.key.PonbKey;
 import com.dwarfeng.subgrade.impl.bean.MapStructBeanTransformer;
 import com.dwarfeng.subgrade.impl.dao.HibernateBatchBaseDao;
@@ -30,6 +32,7 @@ public class DaoConfiguration {
     private final NoteNodePresetCriteriaMaker noteNodePresetCriteriaMaker;
     private final NoteItemPresetCriteriaMaker noteItemPresetCriteriaMaker;
     private final AttachmentFileInfoPresetCriteriaMaker attachmentFileInfoPresetCriteriaMaker;
+    private final FavoritePresetCriteriaMaker favoritePresetCriteriaMaker;
 
     @Value("${hibernate.jdbc.batch_size}")
     private int batchSize;
@@ -40,7 +43,8 @@ public class DaoConfiguration {
             NoteBookPresetCriteriaMaker noteBookPresetCriteriaMaker,
             NoteNodePresetCriteriaMaker noteNodePresetCriteriaMaker,
             NoteItemPresetCriteriaMaker noteItemPresetCriteriaMaker,
-            AttachmentFileInfoPresetCriteriaMaker attachmentFileInfoPresetCriteriaMaker
+            AttachmentFileInfoPresetCriteriaMaker attachmentFileInfoPresetCriteriaMaker,
+            FavoritePresetCriteriaMaker favoritePresetCriteriaMaker
     ) {
         this.template = template;
         this.ponbPresetCriteriaMaker = ponbPresetCriteriaMaker;
@@ -48,6 +52,7 @@ public class DaoConfiguration {
         this.noteNodePresetCriteriaMaker = noteNodePresetCriteriaMaker;
         this.noteItemPresetCriteriaMaker = noteItemPresetCriteriaMaker;
         this.attachmentFileInfoPresetCriteriaMaker = attachmentFileInfoPresetCriteriaMaker;
+        this.favoritePresetCriteriaMaker = favoritePresetCriteriaMaker;
     }
 
     @Bean
@@ -226,6 +231,38 @@ public class DaoConfiguration {
                 ),
                 HibernateAttachmentFileInfo.class,
                 attachmentFileInfoPresetCriteriaMaker
+        );
+    }
+
+    @Bean
+    public HibernateBatchBaseDao<FavoriteKey, HibernateFavoriteKey, Favorite, HibernateFavorite>
+    favoriteHibernateBatchBaseDao() {
+        return new HibernateBatchBaseDao<>(
+                template,
+                new MapStructBeanTransformer<>(FavoriteKey.class, HibernateFavoriteKey.class, HibernateMapper.class),
+                new MapStructBeanTransformer<>(Favorite.class, HibernateFavorite.class, HibernateMapper.class),
+                HibernateFavorite.class,
+                new DefaultDeletionMod<>(),
+                batchSize
+        );
+    }
+
+    @Bean
+    public HibernateEntireLookupDao<Favorite, HibernateFavorite> favoriteHibernateEntireLookupDao() {
+        return new HibernateEntireLookupDao<>(
+                template,
+                new MapStructBeanTransformer<>(Favorite.class, HibernateFavorite.class, HibernateMapper.class),
+                HibernateFavorite.class
+        );
+    }
+
+    @Bean
+    public HibernatePresetLookupDao<Favorite, HibernateFavorite> favoriteHibernatePresetLookupDao() {
+        return new HibernatePresetLookupDao<>(
+                template,
+                new MapStructBeanTransformer<>(Favorite.class, HibernateFavorite.class, HibernateMapper.class),
+                HibernateFavorite.class,
+                favoritePresetCriteriaMaker
         );
     }
 }
