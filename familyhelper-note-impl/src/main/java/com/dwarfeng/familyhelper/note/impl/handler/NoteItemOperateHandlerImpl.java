@@ -75,7 +75,7 @@ public class NoteItemOperateHandlerImpl implements NoteItemOperateHandler {
             LongIdKey noteItemKey = keyGenerator.generate();
 
             // 上传空文件。
-            ftpHandler.storeFile(new String[]{FtpConstants.PATH_NOTE_FILE}, getFileName(noteItemKey), new byte[0]);
+            ftpHandler.storeFile(FtpConstants.PATH_NOTE_FILE, getFileName(noteItemKey), new byte[0]);
 
             // 根据 noteItemCreateInfo 以及创建的规则组合 笔记项目 实体，并调用维护服务插入。
             Date currentDate = new Date();
@@ -199,7 +199,7 @@ public class NoteItemOperateHandlerImpl implements NoteItemOperateHandler {
 
             // 下载个人最佳文件。
             byte[] content = ftpHandler.retrieveFile(
-                    new String[]{FtpConstants.PATH_NOTE_FILE}, getFileName(noteItemKey)
+                    FtpConstants.PATH_NOTE_FILE, getFileName(noteItemKey)
             );
 
             // 更新笔记项目的查看时间，并调用维护服务进行更新。
@@ -240,7 +240,7 @@ public class NoteItemOperateHandlerImpl implements NoteItemOperateHandler {
 
             // 笔记文件内容并存储（覆盖）。
             byte[] content = noteFileUploadInfo.getContent();
-            ftpHandler.storeFile(new String[]{FtpConstants.PATH_NOTE_FILE}, getFileName(noteItemKey), content);
+            ftpHandler.storeFile(FtpConstants.PATH_NOTE_FILE, getFileName(noteItemKey), content);
 
             // 更新笔记项目的查看时间，并调用维护服务进行更新。
             Date currentDate = new Date();

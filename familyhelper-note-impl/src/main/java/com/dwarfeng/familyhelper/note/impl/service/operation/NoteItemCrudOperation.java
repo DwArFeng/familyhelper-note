@@ -78,8 +78,8 @@ public class NoteItemCrudOperation implements BatchCrudOperation<LongIdKey, Note
     @Override
     public void delete(LongIdKey key) throws Exception {
         // 如果存在笔记文件，则删除笔记文件。
-        if (ftpHandler.existsFile(new String[]{FtpConstants.PATH_NOTE_FILE}, getFileName(key))) {
-            ftpHandler.deleteFile(new String[]{FtpConstants.PATH_NOTE_FILE}, getFileName(key));
+        if (ftpHandler.existsFile(FtpConstants.PATH_NOTE_FILE, getFileName(key))) {
+            ftpHandler.deleteFile(FtpConstants.PATH_NOTE_FILE, getFileName(key));
         }
 
         // 查找删除除所有相关的笔记记录。

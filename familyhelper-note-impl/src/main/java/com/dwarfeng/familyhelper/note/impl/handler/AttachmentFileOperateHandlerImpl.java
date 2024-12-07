@@ -76,7 +76,7 @@ public class AttachmentFileOperateHandlerImpl implements AttachmentFileOperateHa
 
             // 下载附件文件。
             byte[] content = ftpHandler.retrieveFile(
-                    new String[]{FtpConstants.PATH_ATTACHMENT_FILE}, getFileName(attachmentFileKey)
+                    FtpConstants.PATH_ATTACHMENT_FILE, getFileName(attachmentFileKey)
             );
 
             // 更新文件的查看时间。
@@ -126,7 +126,7 @@ public class AttachmentFileOperateHandlerImpl implements AttachmentFileOperateHa
             // 附件文件内容并存储（覆盖）。
             byte[] content = attachmentFileUploadInfo.getContent();
             ftpHandler.storeFile(
-                    new String[]{FtpConstants.PATH_ATTACHMENT_FILE}, getFileName(attachmentFileKey), content
+                    FtpConstants.PATH_ATTACHMENT_FILE, getFileName(attachmentFileKey), content
             );
 
             // 根据 attachmentFileUploadInfo 构造 AttachmentFileInfo，插入或更新。
@@ -186,7 +186,7 @@ public class AttachmentFileOperateHandlerImpl implements AttachmentFileOperateHa
             // 附件文件内容并存储（覆盖）。
             byte[] content = attachmentFileUpdateInfo.getContent();
             ftpHandler.storeFile(
-                    new String[]{FtpConstants.PATH_ATTACHMENT_FILE}, getFileName(attachmentFileInfoKey), content
+                    FtpConstants.PATH_ATTACHMENT_FILE, getFileName(attachmentFileInfoKey), content
             );
 
             // 根据 attachmentFileUpdateInfo 更新字段。
@@ -226,9 +226,9 @@ public class AttachmentFileOperateHandlerImpl implements AttachmentFileOperateHa
 
             // 如果存在 AttachmentFile 文件，则删除。
             if (ftpHandler.existsFile(
-                    new String[]{FtpConstants.PATH_ATTACHMENT_FILE}, getFileName(attachmentFileKey)
+                    FtpConstants.PATH_ATTACHMENT_FILE, getFileName(attachmentFileKey)
             )) {
-                ftpHandler.deleteFile(new String[]{FtpConstants.PATH_ATTACHMENT_FILE}, getFileName(attachmentFileKey));
+                ftpHandler.deleteFile(FtpConstants.PATH_ATTACHMENT_FILE, getFileName(attachmentFileKey));
             }
 
             // 如果存在 AttachmentFileInfo 实体，则删除。
