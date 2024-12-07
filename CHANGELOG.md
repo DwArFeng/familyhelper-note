@@ -52,7 +52,8 @@
 
 #### Bug修复
 
-- (无)
+- 修正 Hibernate 实体中的注解错误。
+  - com.dwarfeng.familyhelper.note.impl.bean.entity.HibernatePonb。
 
 #### 功能移除
 

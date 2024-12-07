@@ -33,13 +33,13 @@ public class HibernatePonb implements Bean {
     // -----------------------------------------------------------多对一-----------------------------------------------------------
     @ManyToOne(targetEntity = HibernateNoteBook.class)
     @JoinColumns({ //
-            @JoinColumn(name = "long_id", referencedColumnName = "id", insertable = false, updatable = false), //
+            @JoinColumn(name = "note_book_id", referencedColumnName = "id", insertable = false, updatable = false), //
     })
     private HibernateNoteBook noteBook;
 
     @ManyToOne(targetEntity = HibernateUser.class)
     @JoinColumns({ //
-            @JoinColumn(name = "string_id", referencedColumnName = "id", insertable = false, updatable = false), //
+            @JoinColumn(name = "user_id", referencedColumnName = "id", insertable = false, updatable = false), //
     })
     private HibernateUser user;
 
