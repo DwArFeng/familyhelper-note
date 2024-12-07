@@ -11,6 +11,7 @@ import com.dwarfeng.familyhelper.note.stack.bean.key.PonbKey;
 import com.dwarfeng.familyhelper.note.stack.handler.NoteBookOperateHandler;
 import com.dwarfeng.familyhelper.note.stack.service.NoteBookMaintainService;
 import com.dwarfeng.familyhelper.note.stack.service.PonbMaintainService;
+import com.dwarfeng.subgrade.sdk.exception.HandlerExceptionHelper;
 import com.dwarfeng.subgrade.stack.bean.key.LongIdKey;
 import com.dwarfeng.subgrade.stack.bean.key.StringIdKey;
 import com.dwarfeng.subgrade.stack.exception.HandlerException;
@@ -64,10 +65,8 @@ public class NoteBookOperateHandlerImpl implements NoteBookOperateHandler {
 
             // 5. 返回生成的主键。
             return noteBookKey;
-        } catch (HandlerException e) {
-            throw e;
         } catch (Exception e) {
-            throw new HandlerException(e);
+            throw HandlerExceptionHelper.parse(e);
         }
     }
 
@@ -96,10 +95,8 @@ public class NoteBookOperateHandlerImpl implements NoteBookOperateHandler {
 
             // 5. 更新笔记本实体。
             noteBookMaintainService.update(noteBook);
-        } catch (HandlerException e) {
-            throw e;
         } catch (Exception e) {
-            throw new HandlerException(e);
+            throw HandlerExceptionHelper.parse(e);
         }
     }
 
@@ -117,10 +114,8 @@ public class NoteBookOperateHandlerImpl implements NoteBookOperateHandler {
 
             // 4. 删除指定主键的笔记本。
             noteBookMaintainService.delete(noteBookKey);
-        } catch (HandlerException e) {
-            throw e;
         } catch (Exception e) {
-            throw new HandlerException(e);
+            throw HandlerExceptionHelper.parse(e);
         }
     }
 
@@ -169,10 +164,8 @@ public class NoteBookOperateHandlerImpl implements NoteBookOperateHandler {
                     "赋予用户 " + targetUserKey.getStringId() + " " + permissionLabel + "权限"
             );
             ponbMaintainService.insertOrUpdate(ponb);
-        } catch (HandlerException e) {
-            throw e;
         } catch (Exception e) {
-            throw new HandlerException(e);
+            throw HandlerExceptionHelper.parse(e);
         }
     }
 
@@ -202,10 +195,8 @@ public class NoteBookOperateHandlerImpl implements NoteBookOperateHandler {
             // 5. 通过入口信息组合权限实体主键，并进行存在删除操作。
             PonbKey ponbKey = new PonbKey(noteBookKey.getLongId(), targetUserKey.getStringId());
             ponbMaintainService.deleteIfExists(ponbKey);
-        } catch (HandlerException e) {
-            throw e;
         } catch (Exception e) {
-            throw new HandlerException(e);
+            throw HandlerExceptionHelper.parse(e);
         }
     }
 }

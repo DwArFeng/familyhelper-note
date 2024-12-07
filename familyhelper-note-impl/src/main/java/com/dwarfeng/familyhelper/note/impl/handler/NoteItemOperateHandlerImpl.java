@@ -11,10 +11,11 @@ import com.dwarfeng.familyhelper.note.stack.handler.NoteItemOperateHandler;
 import com.dwarfeng.familyhelper.note.stack.service.NoteBookMaintainService;
 import com.dwarfeng.familyhelper.note.stack.service.NoteItemMaintainService;
 import com.dwarfeng.ftp.handler.FtpHandler;
-import com.dwarfeng.subgrade.stack.bean.key.KeyFetcher;
+import com.dwarfeng.subgrade.sdk.exception.HandlerExceptionHelper;
 import com.dwarfeng.subgrade.stack.bean.key.LongIdKey;
 import com.dwarfeng.subgrade.stack.bean.key.StringIdKey;
 import com.dwarfeng.subgrade.stack.exception.HandlerException;
+import com.dwarfeng.subgrade.stack.generation.KeyGenerator;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -29,7 +30,7 @@ public class NoteItemOperateHandlerImpl implements NoteItemOperateHandler {
 
     private final FtpHandler ftpHandler;
 
-    private final KeyFetcher<LongIdKey> keyFetcher;
+    private final KeyGenerator<LongIdKey> keyGenerator;
 
     private final OperateHandlerValidator operateHandlerValidator;
 
@@ -37,13 +38,13 @@ public class NoteItemOperateHandlerImpl implements NoteItemOperateHandler {
             NoteItemMaintainService noteItemMaintainService,
             NoteBookMaintainService noteBookMaintainService,
             FtpHandler ftpHandler,
-            KeyFetcher<LongIdKey> keyFetcher,
+            KeyGenerator<LongIdKey> keyGenerator,
             OperateHandlerValidator operateHandlerValidator
     ) {
         this.noteItemMaintainService = noteItemMaintainService;
         this.noteBookMaintainService = noteBookMaintainService;
         this.ftpHandler = ftpHandler;
-        this.keyFetcher = keyFetcher;
+        this.keyGenerator = keyGenerator;
         this.operateHandlerValidator = operateHandlerValidator;
     }
 
@@ -71,7 +72,7 @@ public class NoteItemOperateHandlerImpl implements NoteItemOperateHandler {
             operateHandlerValidator.makeSureNoteBookIdenticalForNoteBook(nodeKey, bookKey);
 
             // 分配主键。
-            LongIdKey noteItemKey = keyFetcher.fetchKey();
+            LongIdKey noteItemKey = keyGenerator.generate();
 
             // 上传空文件。
             ftpHandler.storeFile(new String[]{FtpConstants.PATH_NOTE_FILE}, getFileName(noteItemKey), new byte[0]);
@@ -96,10 +97,8 @@ public class NoteItemOperateHandlerImpl implements NoteItemOperateHandler {
 
             // 返回主键。
             return noteItemKey;
-        } catch (HandlerException e) {
-            throw e;
         } catch (Exception e) {
-            throw new HandlerException(e);
+            throw HandlerExceptionHelper.parse(e);
         }
     }
 
@@ -144,10 +143,8 @@ public class NoteItemOperateHandlerImpl implements NoteItemOperateHandler {
                 noteItem.setNodeKey(noteNodeKey);
             }
             noteItemMaintainService.update(noteItem);
-        } catch (HandlerException e) {
-            throw e;
         } catch (Exception e) {
-            throw new HandlerException(e);
+            throw HandlerExceptionHelper.parse(e);
         }
     }
 
@@ -178,10 +175,8 @@ public class NoteItemOperateHandlerImpl implements NoteItemOperateHandler {
             noteBook.setLastInspectedDate(currentDate);
             noteBook.setLastModifiedDate(currentDate);
             noteBookMaintainService.update(noteBook);
-        } catch (HandlerException e) {
-            throw e;
         } catch (Exception e) {
-            throw new HandlerException(e);
+            throw HandlerExceptionHelper.parse(e);
         }
     }
 
@@ -203,7 +198,7 @@ public class NoteItemOperateHandlerImpl implements NoteItemOperateHandler {
             operateHandlerValidator.makeSureUserInspectPermittedForNoteItem(userKey, noteItemKey);
 
             // 下载个人最佳文件。
-            byte[] content = ftpHandler.getFileContent(
+            byte[] content = ftpHandler.retrieveFile(
                     new String[]{FtpConstants.PATH_NOTE_FILE}, getFileName(noteItemKey)
             );
 
@@ -219,10 +214,8 @@ public class NoteItemOperateHandlerImpl implements NoteItemOperateHandler {
 
             // 返回笔记文件。
             return new NoteFile(noteItemKey, content);
-        } catch (HandlerException e) {
-            throw e;
         } catch (Exception e) {
-            throw new HandlerException(e);
+            throw HandlerExceptionHelper.parse(e);
         }
     }
 
@@ -260,10 +253,8 @@ public class NoteItemOperateHandlerImpl implements NoteItemOperateHandler {
             noteBook.setLastInspectedDate(currentDate);
             noteBook.setLastModifiedDate(currentDate);
             noteBookMaintainService.update(noteBook);
-        } catch (HandlerException e) {
-            throw e;
         } catch (Exception e) {
-            throw new HandlerException(e);
+            throw HandlerExceptionHelper.parse(e);
         }
     }
 

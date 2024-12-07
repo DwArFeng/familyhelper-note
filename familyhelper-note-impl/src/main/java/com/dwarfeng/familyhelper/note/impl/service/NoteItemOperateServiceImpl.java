@@ -32,7 +32,7 @@ public class NoteItemOperateServiceImpl implements NoteItemOperateService {
         try {
             return noteItemOperateHandler.createNoteItem(userKey, noteItemCreateInfo);
         } catch (Exception e) {
-            throw ServiceExceptionHelper.logAndThrow("创建笔记项目时发生异常", LogLevel.WARN, sem, e);
+            throw ServiceExceptionHelper.logParse("创建笔记项目时发生异常", LogLevel.WARN, e, sem);
         }
     }
 
@@ -42,7 +42,7 @@ public class NoteItemOperateServiceImpl implements NoteItemOperateService {
         try {
             noteItemOperateHandler.updateNoteItem(userKey, noteItemUpdateInfo);
         } catch (Exception e) {
-            throw ServiceExceptionHelper.logAndThrow("更新笔记项目时发生异常", LogLevel.WARN, sem, e);
+            throw ServiceExceptionHelper.logParse("更新笔记项目时发生异常", LogLevel.WARN, e, sem);
         }
     }
 
@@ -51,7 +51,7 @@ public class NoteItemOperateServiceImpl implements NoteItemOperateService {
         try {
             noteItemOperateHandler.removeNoteItem(userKey, noteItemKey);
         } catch (Exception e) {
-            throw ServiceExceptionHelper.logAndThrow("删除笔记项目时发生异常", LogLevel.WARN, sem, e);
+            throw ServiceExceptionHelper.logParse("删除笔记项目时发生异常", LogLevel.WARN, e, sem);
         }
     }
 
@@ -60,7 +60,7 @@ public class NoteItemOperateServiceImpl implements NoteItemOperateService {
         try {
             return noteItemOperateHandler.downloadNoteFile(userKey, noteItemKey);
         } catch (Exception e) {
-            throw ServiceExceptionHelper.logAndThrow("下载笔记文件时发生异常", LogLevel.WARN, sem, e);
+            throw ServiceExceptionHelper.logParse("下载笔记文件时发生异常", LogLevel.WARN, e, sem);
         }
     }
 
@@ -69,7 +69,7 @@ public class NoteItemOperateServiceImpl implements NoteItemOperateService {
         try {
             noteItemOperateHandler.uploadNoteFile(userKey, noteFileUploadInfo);
         } catch (Exception e) {
-            throw ServiceExceptionHelper.logAndThrow("上传笔记文件时发生异常", LogLevel.WARN, sem, e);
+            throw ServiceExceptionHelper.logParse("上传笔记文件时发生异常", LogLevel.WARN, e, sem);
         }
     }
 }

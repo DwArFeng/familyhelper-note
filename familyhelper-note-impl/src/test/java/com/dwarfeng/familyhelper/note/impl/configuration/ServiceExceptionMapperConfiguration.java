@@ -28,6 +28,6 @@ public class ServiceExceptionMapperConfiguration {
         destination.put(IllegalNoteItemStateException.class, ServiceExceptionCodes.ILLEGAL_NOTE_ITEM_STATE);
         destination.put(AttachmentFileInfoNotExistsException.class, ServiceExceptionCodes.ATTACHMENT_FILE_INFO_NOT_EXISTS);
         destination.put(IllegalAttachmentFileInfoStateException.class, ServiceExceptionCodes.ILLEGAL_ATTACHMENT_FILE_INFO_STATE);
-        return new MapServiceExceptionMapper(destination, com.dwarfeng.subgrade.sdk.exception.ServiceExceptionCodes.UNDEFINE);
+        return new MapServiceExceptionMapper(destination, com.dwarfeng.subgrade.sdk.exception.ServiceExceptionCodes.UNDEFINED);
     }
 }

@@ -34,7 +34,7 @@ public class NoteBookOperateServiceImpl implements NoteBookOperateService {
         try {
             return noteBookOperateHandler.createNoteBook(userKey, noteBookCreateInfo);
         } catch (Exception e) {
-            throw ServiceExceptionHelper.logAndThrow("创建笔记本时发生异常", LogLevel.WARN, sem, e);
+            throw ServiceExceptionHelper.logParse("创建笔记本时发生异常", LogLevel.WARN, e, sem);
         }
     }
 
@@ -44,7 +44,7 @@ public class NoteBookOperateServiceImpl implements NoteBookOperateService {
         try {
             noteBookOperateHandler.updateNoteBook(userKey, noteBookUpdateInfo);
         } catch (Exception e) {
-            throw ServiceExceptionHelper.logAndThrow("更新笔记本时发生异常", LogLevel.WARN, sem, e);
+            throw ServiceExceptionHelper.logParse("更新笔记本时发生异常", LogLevel.WARN, e, sem);
         }
     }
 
@@ -53,7 +53,7 @@ public class NoteBookOperateServiceImpl implements NoteBookOperateService {
         try {
             noteBookOperateHandler.removeNoteBook(userKey, noteBookKey);
         } catch (Exception e) {
-            throw ServiceExceptionHelper.logAndThrow("删除笔记本时发生异常", LogLevel.WARN, sem, e);
+            throw ServiceExceptionHelper.logParse("删除笔记本时发生异常", LogLevel.WARN, e, sem);
         }
     }
 
@@ -64,7 +64,7 @@ public class NoteBookOperateServiceImpl implements NoteBookOperateService {
         try {
             noteBookOperateHandler.upsertPermission(ownerUserKey, noteBookPermissionUpsertInfo);
         } catch (Exception e) {
-            throw ServiceExceptionHelper.logAndThrow("添加笔记本的访客权限时发生异常", LogLevel.WARN, sem, e);
+            throw ServiceExceptionHelper.logParse("添加笔记本的访客权限时发生异常", LogLevel.WARN, e, sem);
         }
     }
 
@@ -75,7 +75,7 @@ public class NoteBookOperateServiceImpl implements NoteBookOperateService {
         try {
             noteBookOperateHandler.removePermission(ownerUserKey, noteBookPermissionRemoveInfo);
         } catch (Exception e) {
-            throw ServiceExceptionHelper.logAndThrow("移除笔记本的访客权限时发生异常", LogLevel.WARN, sem, e);
+            throw ServiceExceptionHelper.logParse("移除笔记本的访客权限时发生异常", LogLevel.WARN, e, sem);
         }
     }
 }

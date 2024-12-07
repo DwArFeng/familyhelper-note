@@ -32,7 +32,7 @@ public class AttachmentFileOperateServiceImpl implements AttachmentFileOperateSe
         try {
             return attachmentFileOperateHandler.downloadAttachmentFile(userKey, attachmentFileKey);
         } catch (Exception e) {
-            throw ServiceExceptionHelper.logAndThrow("下载附件文件时发生异常", LogLevel.WARN, sem, e);
+            throw ServiceExceptionHelper.logParse("下载附件文件时发生异常", LogLevel.WARN, e, sem);
         }
     }
 
@@ -42,7 +42,7 @@ public class AttachmentFileOperateServiceImpl implements AttachmentFileOperateSe
         try {
             attachmentFileOperateHandler.uploadAttachmentFile(userKey, attachmentFileUploadInfo);
         } catch (Exception e) {
-            throw ServiceExceptionHelper.logAndThrow("上传附件文件时发生异常", LogLevel.WARN, sem, e);
+            throw ServiceExceptionHelper.logParse("上传附件文件时发生异常", LogLevel.WARN, e, sem);
         }
     }
 
@@ -52,7 +52,7 @@ public class AttachmentFileOperateServiceImpl implements AttachmentFileOperateSe
         try {
             attachmentFileOperateHandler.updateAttachmentFile(userKey, attachmentFileUpdateInfo);
         } catch (Exception e) {
-            throw ServiceExceptionHelper.logAndThrow("更新附件文件时发生异常", LogLevel.WARN, sem, e);
+            throw ServiceExceptionHelper.logParse("更新附件文件时发生异常", LogLevel.WARN, e, sem);
         }
     }
 
@@ -61,7 +61,7 @@ public class AttachmentFileOperateServiceImpl implements AttachmentFileOperateSe
         try {
             attachmentFileOperateHandler.removeAttachmentFile(userKey, attachmentFileKey);
         } catch (Exception e) {
-            throw ServiceExceptionHelper.logAndThrow("删除附件文件时发生异常", LogLevel.WARN, sem, e);
+            throw ServiceExceptionHelper.logParse("删除附件文件时发生异常", LogLevel.WARN, e, sem);
         }
     }
 }

@@ -7,6 +7,7 @@ import com.dwarfeng.familyhelper.note.stack.bean.entity.NoteNode;
 import com.dwarfeng.familyhelper.note.stack.handler.NoteNodeOperateHandler;
 import com.dwarfeng.familyhelper.note.stack.service.NoteBookMaintainService;
 import com.dwarfeng.familyhelper.note.stack.service.NoteNodeMaintainService;
+import com.dwarfeng.subgrade.sdk.exception.HandlerExceptionHelper;
 import com.dwarfeng.subgrade.stack.bean.key.LongIdKey;
 import com.dwarfeng.subgrade.stack.bean.key.StringIdKey;
 import com.dwarfeng.subgrade.stack.exception.HandlerException;
@@ -71,10 +72,8 @@ public class NoteNodeOperateHandlerImpl implements NoteNodeOperateHandler {
 
             // 插入笔记节点，并返回笔记节点实体的主键。
             return noteNodeMaintainService.insert(noteNode);
-        } catch (HandlerException e) {
-            throw e;
         } catch (Exception e) {
-            throw new HandlerException(e);
+            throw HandlerExceptionHelper.parse(e);
         }
     }
 
@@ -120,10 +119,8 @@ public class NoteNodeOperateHandlerImpl implements NoteNodeOperateHandler {
 
             // 更新 笔记节点 实体。
             noteNodeMaintainService.update(noteNode);
-        } catch (HandlerException e) {
-            throw e;
         } catch (Exception e) {
-            throw new HandlerException(e);
+            throw HandlerExceptionHelper.parse(e);
         }
     }
 
@@ -153,10 +150,8 @@ public class NoteNodeOperateHandlerImpl implements NoteNodeOperateHandler {
 
             // 存在删除指定的笔记节点。
             noteNodeMaintainService.deleteIfExists(noteNodeKey);
-        } catch (HandlerException e) {
-            throw e;
         } catch (Exception e) {
-            throw new HandlerException(e);
+            throw HandlerExceptionHelper.parse(e);
         }
     }
 }

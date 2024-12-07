@@ -12,10 +12,11 @@ import com.dwarfeng.familyhelper.note.stack.service.AttachmentFileInfoMaintainSe
 import com.dwarfeng.familyhelper.note.stack.service.NoteBookMaintainService;
 import com.dwarfeng.familyhelper.note.stack.service.NoteItemMaintainService;
 import com.dwarfeng.ftp.handler.FtpHandler;
-import com.dwarfeng.subgrade.stack.bean.key.KeyFetcher;
+import com.dwarfeng.subgrade.sdk.exception.HandlerExceptionHelper;
 import com.dwarfeng.subgrade.stack.bean.key.LongIdKey;
 import com.dwarfeng.subgrade.stack.bean.key.StringIdKey;
 import com.dwarfeng.subgrade.stack.exception.HandlerException;
+import com.dwarfeng.subgrade.stack.generation.KeyGenerator;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -29,7 +30,7 @@ public class AttachmentFileOperateHandlerImpl implements AttachmentFileOperateHa
 
     private final FtpHandler ftpHandler;
 
-    private final KeyFetcher<LongIdKey> keyFetcher;
+    private final KeyGenerator<LongIdKey> keyGenerator;
 
     private final OperateHandlerValidator operateHandlerValidator;
 
@@ -38,14 +39,14 @@ public class AttachmentFileOperateHandlerImpl implements AttachmentFileOperateHa
             NoteBookMaintainService noteBookMaintainService,
             NoteItemMaintainService noteItemMaintainService,
             FtpHandler ftpHandler,
-            KeyFetcher<LongIdKey> keyFetcher,
+            KeyGenerator<LongIdKey> keyGenerator,
             OperateHandlerValidator operateHandlerValidator
     ) {
         this.attachmentFileInfoMaintainService = attachmentFileInfoMaintainService;
         this.noteBookMaintainService = noteBookMaintainService;
         this.noteItemMaintainService = noteItemMaintainService;
         this.ftpHandler = ftpHandler;
-        this.keyFetcher = keyFetcher;
+        this.keyGenerator = keyGenerator;
         this.operateHandlerValidator = operateHandlerValidator;
     }
 
@@ -74,7 +75,7 @@ public class AttachmentFileOperateHandlerImpl implements AttachmentFileOperateHa
             operateHandlerValidator.makeSureUserInspectPermittedForAttachmentFileInfo(userKey, attachmentFileKey);
 
             // 下载附件文件。
-            byte[] content = ftpHandler.getFileContent(
+            byte[] content = ftpHandler.retrieveFile(
                     new String[]{FtpConstants.PATH_ATTACHMENT_FILE}, getFileName(attachmentFileKey)
             );
 
@@ -94,10 +95,8 @@ public class AttachmentFileOperateHandlerImpl implements AttachmentFileOperateHa
 
             // 拼接 AttachmentFile 并返回。
             return new AttachmentFile(attachmentFileInfo.getOriginName(), content);
-        } catch (HandlerException e) {
-            throw e;
         } catch (Exception e) {
-            throw new HandlerException(e);
+            throw HandlerExceptionHelper.parse(e);
         }
     }
 
@@ -122,7 +121,7 @@ public class AttachmentFileOperateHandlerImpl implements AttachmentFileOperateHa
             operateHandlerValidator.makeSureUserModifyPermittedForNoteItem(userKey, noteItemKey);
 
             // 分配主键。
-            LongIdKey attachmentFileKey = keyFetcher.fetchKey();
+            LongIdKey attachmentFileKey = keyGenerator.generate();
 
             // 附件文件内容并存储（覆盖）。
             byte[] content = attachmentFileUploadInfo.getContent();
@@ -154,10 +153,8 @@ public class AttachmentFileOperateHandlerImpl implements AttachmentFileOperateHa
             noteBook.setLastModifiedDate(currentDate);
             noteBookMaintainService.update(noteBook);
 
-        } catch (HandlerException e) {
-            throw e;
         } catch (Exception e) {
-            throw new HandlerException(e);
+            throw HandlerExceptionHelper.parse(e);
         }
     }
 
@@ -210,10 +207,8 @@ public class AttachmentFileOperateHandlerImpl implements AttachmentFileOperateHa
             noteBook.setLastInspectedDate(currentDate);
             noteBook.setLastModifiedDate(currentDate);
             noteBookMaintainService.update(noteBook);
-        } catch (HandlerException e) {
-            throw e;
         } catch (Exception e) {
-            throw new HandlerException(e);
+            throw HandlerExceptionHelper.parse(e);
         }
     }
 
@@ -238,10 +233,8 @@ public class AttachmentFileOperateHandlerImpl implements AttachmentFileOperateHa
 
             // 如果存在 AttachmentFileInfo 实体，则删除。
             attachmentFileInfoMaintainService.deleteIfExists(attachmentFileKey);
-        } catch (HandlerException e) {
-            throw e;
         } catch (Exception e) {
-            throw new HandlerException(e);
+            throw HandlerExceptionHelper.parse(e);
         }
     }
 

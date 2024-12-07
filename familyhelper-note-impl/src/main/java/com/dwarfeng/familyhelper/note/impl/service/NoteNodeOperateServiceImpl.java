@@ -30,7 +30,7 @@ public class NoteNodeOperateServiceImpl implements NoteNodeOperateService {
         try {
             return noteNodeOperateHandler.createNoteNode(userKey, noteNodeCreateInfo);
         } catch (Exception e) {
-            throw ServiceExceptionHelper.logAndThrow("创建笔记节点时发生异常", LogLevel.WARN, sem, e);
+            throw ServiceExceptionHelper.logParse("创建笔记节点时发生异常", LogLevel.WARN, e, sem);
         }
     }
 
@@ -40,7 +40,7 @@ public class NoteNodeOperateServiceImpl implements NoteNodeOperateService {
         try {
             noteNodeOperateHandler.updateNoteNode(userKey, noteNodeUpdateInfo);
         } catch (Exception e) {
-            throw ServiceExceptionHelper.logAndThrow("更新笔记节点时发生异常", LogLevel.WARN, sem, e);
+            throw ServiceExceptionHelper.logParse("更新笔记节点时发生异常", LogLevel.WARN, e, sem);
         }
     }
 
@@ -49,7 +49,7 @@ public class NoteNodeOperateServiceImpl implements NoteNodeOperateService {
         try {
             noteNodeOperateHandler.removeNoteNode(userKey, noteNodeKey);
         } catch (Exception e) {
-            throw ServiceExceptionHelper.logAndThrow("删除笔记节点时发生异常", LogLevel.WARN, sem, e);
+            throw ServiceExceptionHelper.logParse("删除笔记节点时发生异常", LogLevel.WARN, e, sem);
         }
     }
 }
