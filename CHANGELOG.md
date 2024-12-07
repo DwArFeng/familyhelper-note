@@ -4,7 +4,8 @@
 
 #### 功能构建
 
-- (无)
+- dubbo 优化。
+  - 优化 `dubbo/connection.properties` 中配置的键名。
 
 #### Bug修复
 
