@@ -11,19 +11,25 @@ import com.dwarfeng.subgrade.stack.bean.key.LongIdKey;
  */
 public class NoteBookUpdateInfo implements Dto {
 
-    private static final long serialVersionUID = 8077018608794893937L;
-
+    private static final long serialVersionUID = -8260390569301679543L;
+    
     private LongIdKey noteBookKey;
     private String name;
     private String remark;
 
+    /**
+     * @since 1.1.0
+     */
+    private boolean favorite;
+
     public NoteBookUpdateInfo() {
     }
 
-    public NoteBookUpdateInfo(LongIdKey noteBookKey, String name, String remark) {
+    public NoteBookUpdateInfo(LongIdKey noteBookKey, String name, String remark, boolean favorite) {
         this.noteBookKey = noteBookKey;
         this.name = name;
         this.remark = remark;
+        this.favorite = favorite;
     }
 
     public LongIdKey getNoteBookKey() {
@@ -50,12 +56,21 @@ public class NoteBookUpdateInfo implements Dto {
         this.remark = remark;
     }
 
+    public boolean isFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        this.favorite = favorite;
+    }
+
     @Override
     public String toString() {
         return "NoteBookUpdateInfo{" +
                 "noteBookKey=" + noteBookKey +
                 ", name='" + name + '\'' +
                 ", remark='" + remark + '\'' +
+                ", favorite=" + favorite +
                 '}';
     }
 }

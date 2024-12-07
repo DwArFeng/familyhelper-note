@@ -1,8 +1,10 @@
 package com.dwarfeng.familyhelper.note.sdk.bean.dto;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.dwarfeng.familyhelper.note.sdk.util.Constraints;
 import com.dwarfeng.familyhelper.note.stack.bean.dto.NoteBookCreateInfo;
 import com.dwarfeng.subgrade.stack.bean.dto.Dto;
+import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -16,14 +18,16 @@ import java.util.Objects;
  */
 public class WebInputNoteBookCreateInfo implements Dto {
 
-    private static final long serialVersionUID = 5081048004685316089L;
+    private static final long serialVersionUID = 4228678579723474906L;
 
     public static NoteBookCreateInfo toStackBean(WebInputNoteBookCreateInfo webInputNoteBookCreateInfo) {
         if (Objects.isNull(webInputNoteBookCreateInfo)) {
             return null;
         } else {
             return new NoteBookCreateInfo(
-                    webInputNoteBookCreateInfo.getName(), webInputNoteBookCreateInfo.getRemark()
+                    webInputNoteBookCreateInfo.getName(),
+                    webInputNoteBookCreateInfo.getRemark(),
+                    webInputNoteBookCreateInfo.isFavorite()
             );
         }
     }
@@ -34,7 +38,11 @@ public class WebInputNoteBookCreateInfo implements Dto {
     private String name;
 
     @JSONField(name = "remark")
+    @Length(max = Constraints.LENGTH_REMARK)
     private String remark;
+
+    @JSONField(name = "favorite")
+    private boolean favorite;
 
     public WebInputNoteBookCreateInfo() {
     }
@@ -55,11 +63,20 @@ public class WebInputNoteBookCreateInfo implements Dto {
         this.remark = remark;
     }
 
+    public boolean isFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        this.favorite = favorite;
+    }
+
     @Override
     public String toString() {
         return "WebInputNoteBookCreateInfo{" +
                 "name='" + name + '\'' +
                 ", remark='" + remark + '\'' +
+                ", favorite=" + favorite +
                 '}';
     }
 }

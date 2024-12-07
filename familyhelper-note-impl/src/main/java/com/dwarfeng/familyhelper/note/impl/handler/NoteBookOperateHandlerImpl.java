@@ -5,10 +5,13 @@ import com.dwarfeng.familyhelper.note.stack.bean.dto.NoteBookCreateInfo;
 import com.dwarfeng.familyhelper.note.stack.bean.dto.NoteBookPermissionRemoveInfo;
 import com.dwarfeng.familyhelper.note.stack.bean.dto.NoteBookPermissionUpsertInfo;
 import com.dwarfeng.familyhelper.note.stack.bean.dto.NoteBookUpdateInfo;
+import com.dwarfeng.familyhelper.note.stack.bean.entity.Favorite;
 import com.dwarfeng.familyhelper.note.stack.bean.entity.NoteBook;
 import com.dwarfeng.familyhelper.note.stack.bean.entity.Ponb;
+import com.dwarfeng.familyhelper.note.stack.bean.key.FavoriteKey;
 import com.dwarfeng.familyhelper.note.stack.bean.key.PonbKey;
 import com.dwarfeng.familyhelper.note.stack.handler.NoteBookOperateHandler;
+import com.dwarfeng.familyhelper.note.stack.service.FavoriteMaintainService;
 import com.dwarfeng.familyhelper.note.stack.service.NoteBookMaintainService;
 import com.dwarfeng.familyhelper.note.stack.service.PonbMaintainService;
 import com.dwarfeng.subgrade.sdk.exception.HandlerExceptionHelper;
@@ -25,16 +28,19 @@ public class NoteBookOperateHandlerImpl implements NoteBookOperateHandler {
 
     private final NoteBookMaintainService noteBookMaintainService;
     private final PonbMaintainService ponbMaintainService;
+    private final FavoriteMaintainService favoriteMaintainService;
 
     private final OperateHandlerValidator operateHandlerValidator;
 
     public NoteBookOperateHandlerImpl(
             NoteBookMaintainService noteBookMaintainService,
             PonbMaintainService ponbMaintainService,
+            FavoriteMaintainService favoriteMaintainService,
             OperateHandlerValidator operateHandlerValidator
     ) {
         this.noteBookMaintainService = noteBookMaintainService;
         this.ponbMaintainService = ponbMaintainService;
+        this.favoriteMaintainService = favoriteMaintainService;
         this.operateHandlerValidator = operateHandlerValidator;
     }
 
@@ -42,20 +48,20 @@ public class NoteBookOperateHandlerImpl implements NoteBookOperateHandler {
     public LongIdKey createNoteBook(StringIdKey userKey, NoteBookCreateInfo noteBookCreateInfo)
             throws HandlerException {
         try {
-            // 1. 确认用户存在。
+            // 确认用户存在。
             operateHandlerValidator.makeSureUserExists(userKey);
 
-            // 2. 根据 noteBookCreateInfo 以及创建的规则组合 笔记本 实体。
+            // 根据 noteBookCreateInfo 以及创建的规则组合 笔记本 实体。
             Date currentDate = new Date();
             NoteBook noteBook = new NoteBook(
                     null, noteBookCreateInfo.getName(), noteBookCreateInfo.getRemark(), currentDate,
                     0, currentDate, currentDate
             );
 
-            // 3. 插入笔记本实体，并获取生成的主键。
+            // 插入笔记本实体，并获取生成的主键。
             LongIdKey noteBookKey = noteBookMaintainService.insert(noteBook);
 
-            // 4. 由笔记本实体生成的主键和用户主键组合权限信息，并插入。
+            // 由笔记本实体生成的主键和用户主键组合权限信息，并插入。
             Ponb ponb = new Ponb(
                     new PonbKey(noteBookKey.getLongId(), userKey.getStringId()),
                     Constants.PERMISSION_LEVEL_OWNER,
@@ -63,7 +69,16 @@ public class NoteBookOperateHandlerImpl implements NoteBookOperateHandler {
             );
             ponbMaintainService.insert(ponb);
 
-            // 5. 返回生成的主键。
+            // 如果是收藏，则插入收藏实体。
+            if (noteBookCreateInfo.isFavorite()) {
+                Favorite favorite = new Favorite(
+                        new FavoriteKey(noteBookKey.getLongId(), userKey.getStringId()),
+                        "通过 familyhelper-note 服务上传/更新留言附件"
+                );
+                favoriteMaintainService.insertOrUpdate(favorite);
+            }
+
+            // 返回生成的主键。
             return noteBookKey;
         } catch (Exception e) {
             throw HandlerExceptionHelper.parse(e);
@@ -76,16 +91,16 @@ public class NoteBookOperateHandlerImpl implements NoteBookOperateHandler {
         try {
             LongIdKey noteBookKey = noteBookUpdateInfo.getNoteBookKey();
 
-            // 1. 确认用户存在。
+            // 确认用户存在。
             operateHandlerValidator.makeSureUserExists(userKey);
 
-            // 2. 确认笔记本存在。
+            // 确认笔记本存在。
             operateHandlerValidator.makeSureNoteBookExists(noteBookKey);
 
-            // 3. 确认用户有权限操作指定的笔记本。
+            // 确认用户有权限操作指定的笔记本。
             operateHandlerValidator.makeSureUserModifyPermittedForNoteBook(userKey, noteBookKey);
 
-            // 4. 根据 noteBookUpdateInfo 以及更新的规则设置 笔记本 实体。
+            // 根据 noteBookUpdateInfo 以及更新的规则设置 笔记本 实体。
             NoteBook noteBook = noteBookMaintainService.get(noteBookKey);
             noteBook.setName(noteBookUpdateInfo.getName());
             noteBook.setRemark(noteBookUpdateInfo.getRemark());
@@ -93,8 +108,19 @@ public class NoteBookOperateHandlerImpl implements NoteBookOperateHandler {
             noteBook.setLastInspectedDate(currentDate);
             noteBook.setLastModifiedDate(currentDate);
 
-            // 5. 更新笔记本实体。
+            // 更新笔记本实体。
             noteBookMaintainService.update(noteBook);
+
+            // 如果是收藏，则插入收藏实体。
+            FavoriteKey favoriteKey = new FavoriteKey(noteBookKey.getLongId(), userKey.getStringId());
+            if (noteBookUpdateInfo.isFavorite()) {
+                Favorite favorite = new Favorite(favoriteKey, "通过 familyhelper-note 服务创建/更新");
+                favoriteMaintainService.insertOrUpdate(favorite);
+            }
+            // 否则删除收藏实体。
+            else {
+                favoriteMaintainService.deleteIfExists(favoriteKey);
+            }
         } catch (Exception e) {
             throw HandlerExceptionHelper.parse(e);
         }

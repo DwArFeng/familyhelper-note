@@ -1,9 +1,11 @@
 package com.dwarfeng.familyhelper.note.sdk.bean.dto;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.dwarfeng.familyhelper.note.sdk.util.Constraints;
 import com.dwarfeng.familyhelper.note.stack.bean.dto.NoteBookUpdateInfo;
 import com.dwarfeng.subgrade.sdk.bean.key.WebInputLongIdKey;
 import com.dwarfeng.subgrade.stack.bean.dto.Dto;
+import org.hibernate.validator.constraints.Length;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
@@ -18,7 +20,7 @@ import java.util.Objects;
  */
 public class WebInputNoteBookUpdateInfo implements Dto {
 
-    private static final long serialVersionUID = 8833520083512498306L;
+    private static final long serialVersionUID = 4375909168066912677L;
 
     public static NoteBookUpdateInfo toStackBean(WebInputNoteBookUpdateInfo webInputNoteBookUpdateInfo) {
         if (Objects.isNull(webInputNoteBookUpdateInfo)) {
@@ -26,7 +28,9 @@ public class WebInputNoteBookUpdateInfo implements Dto {
         } else {
             return new NoteBookUpdateInfo(
                     WebInputLongIdKey.toStackBean(webInputNoteBookUpdateInfo.getNoteBookKey()),
-                    webInputNoteBookUpdateInfo.getName(), webInputNoteBookUpdateInfo.getRemark()
+                    webInputNoteBookUpdateInfo.getName(),
+                    webInputNoteBookUpdateInfo.getRemark(),
+                    webInputNoteBookUpdateInfo.isFavorite()
             );
         }
     }
@@ -42,7 +46,11 @@ public class WebInputNoteBookUpdateInfo implements Dto {
     private String name;
 
     @JSONField(name = "remark")
+    @Length(max = Constraints.LENGTH_REMARK)
     private String remark;
+
+    @JSONField(name = "favorite")
+    private boolean favorite;
 
     public WebInputNoteBookUpdateInfo() {
     }
@@ -71,12 +79,21 @@ public class WebInputNoteBookUpdateInfo implements Dto {
         this.remark = remark;
     }
 
+    public boolean isFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        this.favorite = favorite;
+    }
+
     @Override
     public String toString() {
         return "WebInputNoteBookUpdateInfo{" +
                 "noteBookKey=" + noteBookKey +
                 ", name='" + name + '\'' +
                 ", remark='" + remark + '\'' +
+                ", favorite=" + favorite +
                 '}';
     }
 }
