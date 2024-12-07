@@ -4,6 +4,9 @@
 
 #### 功能构建
 
+- 优化 `application-context-*.xml` 中的格式。
+  - application-context-dubbo.xml。
+
 - 依赖升级。
   - 升级 `subgrade` 依赖版本为 `1.5.7.a` 并解决兼容性问题，以应用其新功能。
   - 升级 `dwarfeng-ftp` 依赖版本为 `1.2.2.a` 并解决兼容性问题，以应用其新功能。
