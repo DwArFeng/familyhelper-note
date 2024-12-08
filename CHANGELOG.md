@@ -63,6 +63,9 @@
 
 #### Bug修复
 
+- 修正配置类中的错误。
+  - ExceptionCodeOffsetConfiguration。
+
 - 修正 Hibernate 实体中的注解错误。
   - com.dwarfeng.familyhelper.note.impl.bean.entity.HibernatePonb。
 
