@@ -4,6 +4,9 @@
 
 #### 功能构建
 
+- 依赖优化。
+  - 优化部分依赖的排除项，以避免潜在的 `netty` 版本冲突问题。
+
 - 部分 dubbo 消费者服务注册配置添加 `check="false"` 属性。
   - generateService。
 
