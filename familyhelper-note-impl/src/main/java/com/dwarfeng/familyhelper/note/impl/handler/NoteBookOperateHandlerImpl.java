@@ -1,10 +1,7 @@
 package com.dwarfeng.familyhelper.note.impl.handler;
 
 import com.dwarfeng.familyhelper.note.sdk.util.Constants;
-import com.dwarfeng.familyhelper.note.stack.bean.dto.NoteBookCreateInfo;
-import com.dwarfeng.familyhelper.note.stack.bean.dto.NoteBookPermissionRemoveInfo;
-import com.dwarfeng.familyhelper.note.stack.bean.dto.NoteBookPermissionUpsertInfo;
-import com.dwarfeng.familyhelper.note.stack.bean.dto.NoteBookUpdateInfo;
+import com.dwarfeng.familyhelper.note.stack.bean.dto.*;
 import com.dwarfeng.familyhelper.note.stack.bean.entity.Favorite;
 import com.dwarfeng.familyhelper.note.stack.bean.entity.NoteBook;
 import com.dwarfeng.familyhelper.note.stack.bean.entity.Ponb;
@@ -221,6 +218,36 @@ public class NoteBookOperateHandlerImpl implements NoteBookOperateHandler {
             // 5. 通过入口信息组合权限实体主键，并进行存在删除操作。
             PonbKey ponbKey = new PonbKey(noteBookKey.getLongId(), targetUserKey.getStringId());
             ponbMaintainService.deleteIfExists(ponbKey);
+        } catch (Exception e) {
+            throw HandlerExceptionHelper.parse(e);
+        }
+    }
+
+    @Override
+    public void changeFavored(StringIdKey operateUserKey, NoteBookFavoredChangeInfo info) throws HandlerException {
+        try {
+            // 展开参数。
+            LongIdKey noteBookKey = info.getNoteBookKey();
+
+            // 确认用户存在。
+            operateHandlerValidator.makeSureUserExists(operateUserKey);
+            // 确认笔记本存在。
+            operateHandlerValidator.makeSureNoteBookExists(noteBookKey);
+            // 确认用户有权限查看指定的笔记本。
+            operateHandlerValidator.makeSureUserInspectPermittedForNoteBook(operateUserKey, noteBookKey);
+
+            // 构造收藏实体主键。
+            FavoriteKey favoriteKey = new FavoriteKey(noteBookKey.getLongId(), operateUserKey.getStringId());
+
+            // 如果主键对应的实体存在，则删除实体。
+            if (favoriteMaintainService.exists(favoriteKey)) {
+                favoriteMaintainService.delete(favoriteKey);
+            }
+            // 否则，插入实体。
+            else {
+                Favorite favorite = new Favorite(favoriteKey, "通过 familyhelper-note 服务创建/更新");
+                favoriteMaintainService.insertOrUpdate(favorite);
+            }
         } catch (Exception e) {
             throw HandlerExceptionHelper.parse(e);
         }

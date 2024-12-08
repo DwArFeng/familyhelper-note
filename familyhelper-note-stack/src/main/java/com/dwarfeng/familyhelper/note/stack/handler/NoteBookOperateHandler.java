@@ -1,9 +1,6 @@
 package com.dwarfeng.familyhelper.note.stack.handler;
 
-import com.dwarfeng.familyhelper.note.stack.bean.dto.NoteBookCreateInfo;
-import com.dwarfeng.familyhelper.note.stack.bean.dto.NoteBookPermissionRemoveInfo;
-import com.dwarfeng.familyhelper.note.stack.bean.dto.NoteBookPermissionUpsertInfo;
-import com.dwarfeng.familyhelper.note.stack.bean.dto.NoteBookUpdateInfo;
+import com.dwarfeng.familyhelper.note.stack.bean.dto.*;
 import com.dwarfeng.subgrade.stack.bean.key.LongIdKey;
 import com.dwarfeng.subgrade.stack.bean.key.StringIdKey;
 import com.dwarfeng.subgrade.stack.exception.HandlerException;
@@ -65,4 +62,13 @@ public interface NoteBookOperateHandler extends Handler {
      */
     void removePermission(StringIdKey ownerUserKey, NoteBookPermissionRemoveInfo noteBookPermissionRemoveInfo)
             throws HandlerException;
+
+    /**
+     * 改变笔记本的收藏状态。
+     *
+     * @param operateUserKey 操作者的主键。
+     * @param info           笔记本收藏变更信息。
+     * @throws HandlerException 处理器异常。
+     */
+    void changeFavored(StringIdKey operateUserKey, NoteBookFavoredChangeInfo info) throws HandlerException;
 }

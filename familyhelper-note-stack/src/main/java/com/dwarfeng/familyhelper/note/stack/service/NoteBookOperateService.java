@@ -1,9 +1,6 @@
 package com.dwarfeng.familyhelper.note.stack.service;
 
-import com.dwarfeng.familyhelper.note.stack.bean.dto.NoteBookCreateInfo;
-import com.dwarfeng.familyhelper.note.stack.bean.dto.NoteBookPermissionRemoveInfo;
-import com.dwarfeng.familyhelper.note.stack.bean.dto.NoteBookPermissionUpsertInfo;
-import com.dwarfeng.familyhelper.note.stack.bean.dto.NoteBookUpdateInfo;
+import com.dwarfeng.familyhelper.note.stack.bean.dto.*;
 import com.dwarfeng.subgrade.stack.bean.key.LongIdKey;
 import com.dwarfeng.subgrade.stack.bean.key.StringIdKey;
 import com.dwarfeng.subgrade.stack.exception.ServiceException;
@@ -65,4 +62,13 @@ public interface NoteBookOperateService extends Service {
      */
     void removePermission(StringIdKey ownerUserKey, NoteBookPermissionRemoveInfo noteBookPermissionRemoveInfo)
             throws ServiceException;
+
+    /**
+     * 改变笔记本的收藏状态。
+     *
+     * @param operateUserKey 操作者的主键。
+     * @param info           笔记本收藏变更信息。
+     * @throws ServiceException 服务异常。
+     */
+    void changeFavored(StringIdKey operateUserKey, NoteBookFavoredChangeInfo info) throws ServiceException;
 }

@@ -1,9 +1,6 @@
 package com.dwarfeng.familyhelper.note.impl.service;
 
-import com.dwarfeng.familyhelper.note.stack.bean.dto.NoteBookCreateInfo;
-import com.dwarfeng.familyhelper.note.stack.bean.dto.NoteBookPermissionRemoveInfo;
-import com.dwarfeng.familyhelper.note.stack.bean.dto.NoteBookPermissionUpsertInfo;
-import com.dwarfeng.familyhelper.note.stack.bean.dto.NoteBookUpdateInfo;
+import com.dwarfeng.familyhelper.note.stack.bean.dto.*;
 import com.dwarfeng.familyhelper.note.stack.handler.NoteBookOperateHandler;
 import com.dwarfeng.familyhelper.note.stack.service.NoteBookOperateService;
 import com.dwarfeng.subgrade.sdk.exception.ServiceExceptionHelper;
@@ -76,6 +73,15 @@ public class NoteBookOperateServiceImpl implements NoteBookOperateService {
             noteBookOperateHandler.removePermission(ownerUserKey, noteBookPermissionRemoveInfo);
         } catch (Exception e) {
             throw ServiceExceptionHelper.logParse("移除笔记本的访客权限时发生异常", LogLevel.WARN, e, sem);
+        }
+    }
+
+    @Override
+    public void changeFavored(StringIdKey operateUserKey, NoteBookFavoredChangeInfo info) throws ServiceException {
+        try {
+            noteBookOperateHandler.changeFavored(operateUserKey, info);
+        } catch (Exception e) {
+            throw ServiceExceptionHelper.logParse("改变笔记本的收藏状态时发生异常", LogLevel.WARN, e, sem);
         }
     }
 }

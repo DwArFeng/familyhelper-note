@@ -4,6 +4,9 @@
 
 #### 功能构建
 
+- 增加操作服务方法。
+  - com.dwarfeng.familyhelper.note.stack.service.NoteBookOperateService。
+
 - 增加预设查询。
   - NoteBookMaintainService.USER_OWNED。
   - NoteBookMaintainService.USER_PERMITTED_WITH_CONDITION_DISPLAY。
