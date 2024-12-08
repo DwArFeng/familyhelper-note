@@ -4,6 +4,9 @@
 
 #### 功能构建
 
+- 部分 dubbo 消费者服务注册配置添加 `check="false"` 属性。
+  - generateService。
+
 - 优化配置文件。
   - 优化 `application-context-database.xml`，使得更多属性可以在配置文件中配置。
 
