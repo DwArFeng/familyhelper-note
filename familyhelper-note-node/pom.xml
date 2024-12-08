@@ -10,7 +10,7 @@
     <parent>
         <artifactId>familyhelper-note</artifactId>
         <groupId>com.dwarfeng</groupId>
-        <version>1.1.0.a-SNAPSHOT</version>
+        <version>1.1.0.a</version>
     </parent>
 
     <artifactId>familyhelper-note-node</artifactId>
