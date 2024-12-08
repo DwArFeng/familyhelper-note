@@ -4,6 +4,11 @@
 
 #### 功能构建
 
+- 增加预设查询。
+  - NoteBookMaintainService.USER_OWNED。
+  - NoteBookMaintainService.USER_PERMITTED_WITH_CONDITION_DISPLAY。
+  - NoteBookMaintainService.USER_OWNED_WITH_CONDITION_DISPLAY。
+
 - 新增实体。
   - com.dwarfeng.familyhelper.note.stack.bean.entity.Favorite。
 
