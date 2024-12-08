@@ -4,6 +4,9 @@
 
 #### 功能构建
 
+- 优化配置文件。
+  - 优化 `application-context-database.xml`，使得更多属性可以在配置文件中配置。
+
 - 增加操作服务方法。
   - com.dwarfeng.familyhelper.note.stack.service.NoteBookOperateService。
 
