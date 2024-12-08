@@ -72,6 +72,8 @@
 
 #### Bug修复
 
+- 修复 `assembly.xml` 中缺失的配置项。
+
 - 修正配置类中的错误。
   - ExceptionCodeOffsetConfiguration。
 
