@@ -142,6 +142,8 @@ public class NoteBookOperateHandlerImpl implements NoteBookOperateHandler {
         }
     }
 
+    // 为了程序的可读性，此处不做代码提取。
+    @SuppressWarnings("ExtractMethodRecommender")
     @Override
     public void upsertPermission(
             StringIdKey ownerUserKey, NoteBookPermissionUpsertInfo noteBookPermissionUpsertInfo
