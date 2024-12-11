@@ -4,7 +4,8 @@
 
 #### 功能构建
 
-- (无)
+- 增加预设查询。
+  - PonbMaintainService.CHILD_FOR_NOTE_BOOK_SET。
 
 #### Bug修复
 

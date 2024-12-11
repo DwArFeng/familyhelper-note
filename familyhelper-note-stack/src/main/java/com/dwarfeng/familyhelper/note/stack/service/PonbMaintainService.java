@@ -19,4 +19,17 @@ public interface PonbMaintainService extends BatchCrudService<PonbKey, Ponb>,
     String CHILD_FOR_USER = "child_for_user";
     String CHILD_FOR_NOTE_BOOK_PERMISSION_LEVEL_EQUALS = "child_for_note_book_permission_level_equals";
     String CHILD_FOR_USER_PERMISSION_LEVEL_EQUALS = "child_for_user_permission_level_equals";
+
+    /**
+     * 获取笔记本集合对应的笔记本权限子项。
+     *
+     * <p>
+     * 参数列表：
+     * <ol>
+     *     <li>Collection&lt;LongIdKey&gt; 笔记本的键组成的集合。</li>
+     * </ol>
+     *
+     * @since 1.1.1
+     */
+    String CHILD_FOR_NOTE_BOOK_SET = "child_for_note_book_set";
 }
