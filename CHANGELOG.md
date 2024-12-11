@@ -8,7 +8,8 @@
 
 #### Bug修复
 
-- (无)
+- 修正配置文件中的错误。
+  - logging/settings-linux.xml。
 
 #### 功能移除
 
