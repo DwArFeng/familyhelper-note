@@ -9,7 +9,7 @@
 
     <groupId>com.dwarfeng</groupId>
     <artifactId>familyhelper-note</artifactId>
-    <version>1.1.1.a-SNAPSHOT</version>
+    <version>1.1.1.a</version>
 
     <packaging>pom</packaging>
 
@@ -448,22 +448,22 @@
             <dependency>
                 <groupId>com.dwarfeng</groupId>
                 <artifactId>familyhelper-note-stack</artifactId>
-                <version>1.1.1.a-SNAPSHOT</version>
+                <version>1.1.1.a</version>
             </dependency>
             <dependency>
                 <groupId>com.dwarfeng</groupId>
                 <artifactId>familyhelper-note-sdk</artifactId>
-                <version>1.1.1.a-SNAPSHOT</version>
+                <version>1.1.1.a</version>
             </dependency>
             <dependency>
                 <groupId>com.dwarfeng</groupId>
                 <artifactId>familyhelper-note-impl</artifactId>
-                <version>1.1.1.a-SNAPSHOT</version>
+                <version>1.1.1.a</version>
             </dependency>
             <dependency>
                 <groupId>com.dwarfeng</groupId>
                 <artifactId>familyhelper-note-node</artifactId>
-                <version>1.1.1.a-SNAPSHOT</version>
+                <version>1.1.1.a</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
