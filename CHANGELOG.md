@@ -8,7 +8,8 @@
 
 #### Bug修复
 
-- (无)
+- 修正部分 WebInput DTO 中不正确的 JSON 字段名称。
+  - com.dwarfeng.familyhelper.note.sdk.bean.dto.WebInputNoteNodeUpdateInfo。
 
 #### 功能移除
 

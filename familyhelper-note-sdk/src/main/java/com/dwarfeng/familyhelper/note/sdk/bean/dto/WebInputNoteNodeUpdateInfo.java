@@ -38,7 +38,7 @@ public class WebInputNoteNodeUpdateInfo implements Dto {
     @Valid
     private WebInputLongIdKey key;
 
-    @JSONField(name = "set_key")
+    @JSONField(name = "parent_key")
     @Valid
     private WebInputLongIdKey parentKey;
 
