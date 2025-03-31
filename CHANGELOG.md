@@ -4,6 +4,12 @@
 
 #### 功能构建
 
+- 依赖升级。
+  - 升级 `jetty` 依赖版本为 `9.4.57.v20241219` 以规避漏洞。
+  - 升级 `snowflake` 依赖版本为 `1.6.0.a` 以规避漏洞。
+  - 升级 `subgrade` 依赖版本为 `1.5.8.a` 以规避漏洞。
+  - 升级 `dwarfeng-ftp` 依赖版本为 `1.2.4.a` 以规避漏洞。
+
 - FTP 路径机制优化。
   - 新增 FtpPathResolver 代替 FtpConstants，使得 FTP 路径由静态定义变为动态解析。
   - 新增 `ftp/path.properties`，使得服务的 FTP 根路径支持动态配置。
