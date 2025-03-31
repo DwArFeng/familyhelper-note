@@ -1,6 +1,5 @@
 package com.dwarfeng.familyhelper.note.impl.handler;
 
-import com.dwarfeng.familyhelper.note.impl.util.FtpConstants;
 import com.dwarfeng.familyhelper.note.stack.bean.dto.AttachmentFile;
 import com.dwarfeng.familyhelper.note.stack.bean.dto.AttachmentFileUpdateInfo;
 import com.dwarfeng.familyhelper.note.stack.bean.dto.AttachmentFileUploadInfo;
@@ -30,6 +29,8 @@ public class AttachmentFileOperateHandlerImpl implements AttachmentFileOperateHa
 
     private final FtpHandler ftpHandler;
 
+    private final FtpPathResolver ftpPathResolver;
+
     private final KeyGenerator<LongIdKey> keyGenerator;
 
     private final OperateHandlerValidator operateHandlerValidator;
@@ -39,6 +40,7 @@ public class AttachmentFileOperateHandlerImpl implements AttachmentFileOperateHa
             NoteBookMaintainService noteBookMaintainService,
             NoteItemMaintainService noteItemMaintainService,
             FtpHandler ftpHandler,
+            FtpPathResolver ftpPathResolver,
             KeyGenerator<LongIdKey> keyGenerator,
             OperateHandlerValidator operateHandlerValidator
     ) {
@@ -46,6 +48,7 @@ public class AttachmentFileOperateHandlerImpl implements AttachmentFileOperateHa
         this.noteBookMaintainService = noteBookMaintainService;
         this.noteItemMaintainService = noteItemMaintainService;
         this.ftpHandler = ftpHandler;
+        this.ftpPathResolver = ftpPathResolver;
         this.keyGenerator = keyGenerator;
         this.operateHandlerValidator = operateHandlerValidator;
     }
@@ -76,7 +79,8 @@ public class AttachmentFileOperateHandlerImpl implements AttachmentFileOperateHa
 
             // 下载附件文件。
             byte[] content = ftpHandler.retrieveFile(
-                    FtpConstants.PATH_ATTACHMENT_FILE, getFileName(attachmentFileKey)
+                    ftpPathResolver.resolvePath(FtpPathResolver.RELATIVE_PATH_ATTACHMENT_FILE),
+                    getFileName(attachmentFileKey)
             );
 
             // 更新文件的查看时间。
@@ -126,7 +130,9 @@ public class AttachmentFileOperateHandlerImpl implements AttachmentFileOperateHa
             // 附件文件内容并存储（覆盖）。
             byte[] content = attachmentFileUploadInfo.getContent();
             ftpHandler.storeFile(
-                    FtpConstants.PATH_ATTACHMENT_FILE, getFileName(attachmentFileKey), content
+                    ftpPathResolver.resolvePath(FtpPathResolver.RELATIVE_PATH_ATTACHMENT_FILE),
+                    getFileName(attachmentFileKey),
+                    content
             );
 
             // 根据 attachmentFileUploadInfo 构造 AttachmentFileInfo，插入或更新。
@@ -186,7 +192,9 @@ public class AttachmentFileOperateHandlerImpl implements AttachmentFileOperateHa
             // 附件文件内容并存储（覆盖）。
             byte[] content = attachmentFileUpdateInfo.getContent();
             ftpHandler.storeFile(
-                    FtpConstants.PATH_ATTACHMENT_FILE, getFileName(attachmentFileInfoKey), content
+                    ftpPathResolver.resolvePath(FtpPathResolver.RELATIVE_PATH_ATTACHMENT_FILE),
+                    getFileName(attachmentFileInfoKey),
+                    content
             );
 
             // 根据 attachmentFileUpdateInfo 更新字段。
@@ -226,9 +234,13 @@ public class AttachmentFileOperateHandlerImpl implements AttachmentFileOperateHa
 
             // 如果存在 AttachmentFile 文件，则删除。
             if (ftpHandler.existsFile(
-                    FtpConstants.PATH_ATTACHMENT_FILE, getFileName(attachmentFileKey)
+                    ftpPathResolver.resolvePath(FtpPathResolver.RELATIVE_PATH_ATTACHMENT_FILE),
+                    getFileName(attachmentFileKey)
             )) {
-                ftpHandler.deleteFile(FtpConstants.PATH_ATTACHMENT_FILE, getFileName(attachmentFileKey));
+                ftpHandler.deleteFile(
+                        ftpPathResolver.resolvePath(FtpPathResolver.RELATIVE_PATH_ATTACHMENT_FILE),
+                        getFileName(attachmentFileKey)
+                );
             }
 
             // 如果存在 AttachmentFileInfo 实体，则删除。

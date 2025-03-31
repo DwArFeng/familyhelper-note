@@ -1,6 +1,6 @@
 package com.dwarfeng.familyhelper.note.impl.service.operation;
 
-import com.dwarfeng.familyhelper.note.impl.util.FtpConstants;
+import com.dwarfeng.familyhelper.note.impl.handler.FtpPathResolver;
 import com.dwarfeng.familyhelper.note.stack.bean.entity.AttachmentFileInfo;
 import com.dwarfeng.familyhelper.note.stack.cache.AttachmentFileInfoCache;
 import com.dwarfeng.familyhelper.note.stack.dao.AttachmentFileInfoDao;
@@ -22,16 +22,21 @@ public class AttachmentFileInfoCrudOperation implements BatchCrudOperation<LongI
 
     private final FtpHandler ftpHandler;
 
+    private final FtpPathResolver ftpPathResolver;
+
     @Value("${cache.timeout.entity.attachment_file_info}")
     private long attachmentFileInfoTimeout;
 
     public AttachmentFileInfoCrudOperation(
-            AttachmentFileInfoDao attachmentFileInfoDao, AttachmentFileInfoCache attachmentFileInfoCache,
-            FtpHandler ftpHandler
+            AttachmentFileInfoDao attachmentFileInfoDao,
+            AttachmentFileInfoCache attachmentFileInfoCache,
+            FtpHandler ftpHandler,
+            FtpPathResolver ftpPathResolver
     ) {
         this.attachmentFileInfoDao = attachmentFileInfoDao;
         this.attachmentFileInfoCache = attachmentFileInfoCache;
         this.ftpHandler = ftpHandler;
+        this.ftpPathResolver = ftpPathResolver;
     }
 
     @Override
@@ -68,8 +73,12 @@ public class AttachmentFileInfoCrudOperation implements BatchCrudOperation<LongI
     @Override
     public void delete(LongIdKey key) throws Exception {
         // 如果存在附件文件，则删除附件文件。
-        if (ftpHandler.existsFile(FtpConstants.PATH_ATTACHMENT_FILE, getFileName(key))) {
-            ftpHandler.deleteFile(FtpConstants.PATH_ATTACHMENT_FILE, getFileName(key));
+        if (ftpHandler.existsFile(
+                ftpPathResolver.resolvePath(FtpPathResolver.RELATIVE_PATH_ATTACHMENT_FILE), getFileName(key)
+        )) {
+            ftpHandler.deleteFile(
+                    ftpPathResolver.resolvePath(FtpPathResolver.RELATIVE_PATH_ATTACHMENT_FILE), getFileName(key)
+            );
         }
 
         // 删除附件文件信息实体自身。

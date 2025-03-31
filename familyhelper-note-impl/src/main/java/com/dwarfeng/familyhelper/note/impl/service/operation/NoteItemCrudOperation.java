@@ -1,6 +1,6 @@
 package com.dwarfeng.familyhelper.note.impl.service.operation;
 
-import com.dwarfeng.familyhelper.note.impl.util.FtpConstants;
+import com.dwarfeng.familyhelper.note.impl.handler.FtpPathResolver;
 import com.dwarfeng.familyhelper.note.stack.bean.entity.AttachmentFileInfo;
 import com.dwarfeng.familyhelper.note.stack.bean.entity.NoteItem;
 import com.dwarfeng.familyhelper.note.stack.cache.NoteItemCache;
@@ -29,19 +29,25 @@ public class NoteItemCrudOperation implements BatchCrudOperation<LongIdKey, Note
 
     private final FtpHandler ftpHandler;
 
+    private final FtpPathResolver ftpPathResolver;
+
     @Value("${cache.timeout.entity.note_item}")
     private long noteItemTimeout;
 
     public NoteItemCrudOperation(
-            NoteItemDao noteItemDao, NoteItemCache noteItemCache,
-            AttachmentFileInfoCrudOperation attachmentFileInfoCrudOperation, AttachmentFileInfoDao attachmentFileInfoDao,
-            FtpHandler ftpHandler
+            NoteItemDao noteItemDao,
+            NoteItemCache noteItemCache,
+            AttachmentFileInfoCrudOperation attachmentFileInfoCrudOperation,
+            AttachmentFileInfoDao attachmentFileInfoDao,
+            FtpHandler ftpHandler,
+            FtpPathResolver ftpPathResolver
     ) {
         this.noteItemDao = noteItemDao;
         this.noteItemCache = noteItemCache;
         this.attachmentFileInfoCrudOperation = attachmentFileInfoCrudOperation;
         this.attachmentFileInfoDao = attachmentFileInfoDao;
         this.ftpHandler = ftpHandler;
+        this.ftpPathResolver = ftpPathResolver;
     }
 
     @Override
@@ -78,8 +84,12 @@ public class NoteItemCrudOperation implements BatchCrudOperation<LongIdKey, Note
     @Override
     public void delete(LongIdKey key) throws Exception {
         // 如果存在笔记文件，则删除笔记文件。
-        if (ftpHandler.existsFile(FtpConstants.PATH_NOTE_FILE, getFileName(key))) {
-            ftpHandler.deleteFile(FtpConstants.PATH_NOTE_FILE, getFileName(key));
+        if (ftpHandler.existsFile(
+                ftpPathResolver.resolvePath(FtpPathResolver.RELATIVE_PATH_NOTE_FILE), getFileName(key)
+        )) {
+            ftpHandler.deleteFile(
+                    ftpPathResolver.resolvePath(FtpPathResolver.RELATIVE_PATH_NOTE_FILE), getFileName(key)
+            );
         }
 
         // 查找删除除所有相关的笔记记录。

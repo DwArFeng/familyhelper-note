@@ -1,6 +1,5 @@
 package com.dwarfeng.familyhelper.note.impl.handler;
 
-import com.dwarfeng.familyhelper.note.impl.util.FtpConstants;
 import com.dwarfeng.familyhelper.note.stack.bean.dto.NoteFile;
 import com.dwarfeng.familyhelper.note.stack.bean.dto.NoteFileUploadInfo;
 import com.dwarfeng.familyhelper.note.stack.bean.dto.NoteItemCreateInfo;
@@ -30,6 +29,8 @@ public class NoteItemOperateHandlerImpl implements NoteItemOperateHandler {
 
     private final FtpHandler ftpHandler;
 
+    private final FtpPathResolver ftpPathResolver;
+
     private final KeyGenerator<LongIdKey> keyGenerator;
 
     private final OperateHandlerValidator operateHandlerValidator;
@@ -38,12 +39,14 @@ public class NoteItemOperateHandlerImpl implements NoteItemOperateHandler {
             NoteItemMaintainService noteItemMaintainService,
             NoteBookMaintainService noteBookMaintainService,
             FtpHandler ftpHandler,
+            FtpPathResolver ftpPathResolver,
             KeyGenerator<LongIdKey> keyGenerator,
             OperateHandlerValidator operateHandlerValidator
     ) {
         this.noteItemMaintainService = noteItemMaintainService;
         this.noteBookMaintainService = noteBookMaintainService;
         this.ftpHandler = ftpHandler;
+        this.ftpPathResolver = ftpPathResolver;
         this.keyGenerator = keyGenerator;
         this.operateHandlerValidator = operateHandlerValidator;
     }
@@ -75,7 +78,11 @@ public class NoteItemOperateHandlerImpl implements NoteItemOperateHandler {
             LongIdKey noteItemKey = keyGenerator.generate();
 
             // 上传空文件。
-            ftpHandler.storeFile(FtpConstants.PATH_NOTE_FILE, getFileName(noteItemKey), new byte[0]);
+            ftpHandler.storeFile(
+                    ftpPathResolver.resolvePath(FtpPathResolver.RELATIVE_PATH_NOTE_FILE),
+                    getFileName(noteItemKey),
+                    new byte[0]
+            );
 
             // 根据 noteItemCreateInfo 以及创建的规则组合 笔记项目 实体，并调用维护服务插入。
             Date currentDate = new Date();
@@ -199,7 +206,7 @@ public class NoteItemOperateHandlerImpl implements NoteItemOperateHandler {
 
             // 下载个人最佳文件。
             byte[] content = ftpHandler.retrieveFile(
-                    FtpConstants.PATH_NOTE_FILE, getFileName(noteItemKey)
+                    ftpPathResolver.resolvePath(FtpPathResolver.RELATIVE_PATH_NOTE_FILE), getFileName(noteItemKey)
             );
 
             // 更新笔记项目的查看时间，并调用维护服务进行更新。
@@ -240,7 +247,11 @@ public class NoteItemOperateHandlerImpl implements NoteItemOperateHandler {
 
             // 笔记文件内容并存储（覆盖）。
             byte[] content = noteFileUploadInfo.getContent();
-            ftpHandler.storeFile(FtpConstants.PATH_NOTE_FILE, getFileName(noteItemKey), content);
+            ftpHandler.storeFile(
+                    ftpPathResolver.resolvePath(FtpPathResolver.RELATIVE_PATH_NOTE_FILE),
+                    getFileName(noteItemKey),
+                    content
+            );
 
             // 更新笔记项目的查看时间，并调用维护服务进行更新。
             Date currentDate = new Date();
